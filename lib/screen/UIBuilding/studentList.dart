@@ -57,7 +57,7 @@ Container listCard(
         SizedBox(width: MediaQuery.of(context).size.width * 0.01),
         Container(
           //height: MediaQuery.of(context).size.height * 0.04,
-          width: MediaQuery.of(context).size.width * 0.2,
+          width: MediaQuery.of(context).size.width * 0.25,
           decoration: BoxDecoration(
             //color: AppColors.color4,// Set the background color of the container
             borderRadius: BorderRadius.circular(8.0), // Set the corner radius
@@ -67,7 +67,7 @@ Container listCard(
         SizedBox(width: MediaQuery.of(context).size.width * 0.01),
         Container(
           height: MediaQuery.of(context).size.height * 0.04,
-          width: MediaQuery.of(context).size.width * 0.15,
+          width: MediaQuery.of(context).size.width * 0.1,
 
           child: Center(child: Text("$grade", style: fontStyle.font3)),
         ),

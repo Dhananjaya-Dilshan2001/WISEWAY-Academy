@@ -3,9 +3,9 @@ import 'package:apk/commonWidget/drawer.dart';
 import 'package:apk/commonWidget/font&color.dart';
 import 'package:apk/dataModel/model.dart';
 import 'package:apk/firebase/studentFunctios.dart';
+import 'package:apk/functions/classes.dart';
 import 'package:apk/functions/student.dart';
 import 'package:apk/screen/UIBuilding/studentList.dart';
-import 'package:apk/screen/classDashboard.dart';
 import 'package:apk/screen/collectPayment.dart';
 import 'package:apk/screen/paymentReport.dart';
 import 'package:apk/screen/popUpWindows/addNewClass.dart';
@@ -196,138 +196,11 @@ class _adminPanelState extends State<adminPanel>
               color: AppColors.color4,
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Classdashboard()),
-                );
-                // Perform any action here
-              },
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.15,
-                width: MediaQuery.of(context).size.width * 0.9,
-                decoration: BoxDecoration(
-                  color: AppColors.color2.withOpacity(0.7),
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: Column(
-                  children: [
-                    SizedBox(height: MediaQuery.of(context).size.width * 0.01),
-                    Row(
-                      children: [
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.25,
-                        ),
-                        Text(
-                          "Grade 10 - Cambridge",
-                          style: TextStyle(
-                            color: AppColors.color4,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'NotoSansSinhala',
-                            fontSize: MediaQuery.of(context).size.width * 0.04,
-                          ),
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.17,
-                        ),
-                        Icon(Icons.settings, color: AppColors.color4),
-                      ],
-                    ),
-                    SizedBox(height: MediaQuery.of(context).size.width * 0.01),
-                    Text(
-                      "Computer Science",
-                      style: TextStyle(
-                        color: AppColors.color4,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'NotoSansSinhala',
-                        fontSize: MediaQuery.of(context).size.width * 0.06,
-                      ),
-                    ),
-                    SizedBox(height: MediaQuery.of(context).size.width * 0.01),
-                    Row(
-                      children: [
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.03,
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.4,
-                          //height: MediaQuery.of(context).size.height * 0.05,
-                          //color: AppColors.color5,
-                          child: Text(
-                            "Saturday",
-                            style: TextStyle(
-                              color: AppColors.color4,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'NotoSansSinhala',
-                              fontSize:
-                                  MediaQuery.of(context).size.width * 0.04,
-                            ),
-                          ),
-                        ),
-
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.04,
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.4,
-                          alignment: Alignment.centerRight,
-                          //color: AppColors.color5,
-                          child: Text(
-                            "Conducted by",
-                            style: TextStyle(
-                              color: AppColors.color4,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'NotoSansSinhala',
-                              fontSize:
-                                  MediaQuery.of(context).size.width * 0.04,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.03,
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.4,
-                          //color: AppColors.color5,
-                          child: Text(
-                            "04.00pm - 06.00pm",
-                            style: TextStyle(
-                              color: AppColors.color4,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'NotoSansSinhala',
-                              fontSize:
-                                  MediaQuery.of(context).size.width * 0.04,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.04,
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.4,
-                          alignment: Alignment.centerRight,
-                          //color: AppColors.color5,
-                          child: Text(
-                            "Ishan Randika",
-                            style: TextStyle(
-                              color: AppColors.color4,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'NotoSansSinhala',
-                              fontSize:
-                                  MediaQuery.of(context).size.width * 0.05,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+            Container(
+              height: MediaQuery.of(context).size.height * 0.5,
+              width: MediaQuery.of(context).size.width * 0.9,
+              //color: AppColors.color2,
+              child: ListView(children: classList),
             ),
           ],
         ),

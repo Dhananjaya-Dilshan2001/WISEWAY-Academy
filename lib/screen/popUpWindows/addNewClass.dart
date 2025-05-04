@@ -328,7 +328,7 @@ class _addNewClassState extends State<addNewClass> {
             SizedBox(height: MediaQuery.of(context).size.height * 0.005),
             Container(
               height: MediaQuery.of(context).size.height * 0.07,
-              width: MediaQuery.of(context).size.width * 0.3,
+              width: MediaQuery.of(context).size.width * 0.5,
               //color: AppColors.color5,
               child: Column(
                 children: [
@@ -343,12 +343,16 @@ class _addNewClassState extends State<addNewClass> {
                       });
                     },
                     child: Container(
-                      height: 30,
-                      width: MediaQuery.of(context).size.width * 0.4,
+                      padding: EdgeInsets.all(5),
+                      //height: 30,
+                      //width: MediaQuery.of(context).size.width * 0.4,
                       child: Center(
-                        child: Text(
-                          "${widget.object.ID.isEmpty ? "Tap to generate" : widget.object.ID}",
-                          style: fontStyle.font4,
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            "${widget.object.ID.isEmpty ? "Tap to generate" : widget.object.ID}",
+                            style: fontStyle.font4,
+                          ),
                         ),
                       ),
                       decoration: BoxDecoration(

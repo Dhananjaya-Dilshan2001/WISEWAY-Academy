@@ -1,4 +1,5 @@
 import 'package:apk/commonWidget/font&color.dart';
+import 'package:apk/dataModel/model.dart';
 import 'package:apk/screen/adminPanel.dart';
 import 'package:apk/screen/popUpWindows/addDay.dart';
 import 'package:apk/screen/popUpWindows/allStudent.dart';
@@ -6,7 +7,8 @@ import 'package:apk/screen/popUpWindows/updateStudent.dart';
 import 'package:flutter/material.dart';
 
 class Classdashboard extends StatefulWidget {
-  const Classdashboard({super.key});
+  final aClass object;
+  const Classdashboard({super.key, required this.object});
   @override
   State<Classdashboard> createState() => _ClassdashboardState();
 }
@@ -15,9 +17,6 @@ class _ClassdashboardState extends State<Classdashboard> {
   // ignore: annotate_overrides
   void initState() {
     super.initState();
-    setState(() {
-      print("Trigger Class Dashboard UI..!");
-    });
   }
 
   @override
@@ -45,8 +44,8 @@ class _ClassdashboardState extends State<Classdashboard> {
         children: [
           SizedBox(height: MediaQuery.of(context).size.height * 0.02),
           Container(
-            padding: EdgeInsets.all(10),
-            height: MediaQuery.of(context).size.height * 0.19,
+            padding: EdgeInsets.all(5),
+            height: MediaQuery.of(context).size.height * 0.2,
             width: MediaQuery.of(context).size.width * 0.9,
             decoration: BoxDecoration(
               color: AppColors.color2,
@@ -76,15 +75,42 @@ class _ClassdashboardState extends State<Classdashboard> {
                     Container(
                       alignment: Alignment.centerLeft,
                       //height: MediaQuery.of(context).size.height * 0.18,
-                      width: MediaQuery.of(context).size.width * 0.5,
+                      width: MediaQuery.of(context).size.width * 0.55,
                       //color: AppColors.color5,
                       child: Column(
                         children: [
-                          Text(
-                            "Mathematics Edexcel - G10\nIshan Sir\nMathG10001",
-                            style: fontStyle.font3,
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.5,
+                            height: 30,
+                            child: Text(
+                              "${widget.object.subject}",
+                              style: fontStyle.font3,
+                            ),
                           ),
-                          //Text("Ishan Sir", style: fontStyle.font3),
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.5,
+                            height: 30,
+                            child: Text(
+                              "${widget.object.curriculm} - G${widget.object.grade}",
+                              style: fontStyle.font3,
+                            ),
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.5,
+                            height: 30,
+                            child: Text(
+                              "${widget.object.teacher}",
+                              style: fontStyle.font3,
+                            ),
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.5,
+                            height: 30,
+                            child: Text(
+                              "${widget.object.ID}",
+                              style: fontStyle.font3,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -93,7 +119,7 @@ class _ClassdashboardState extends State<Classdashboard> {
                 Container(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "Monday 8.00 AM - 10.00 AM",
+                    "   ${widget.object.note}",
                     style: fontStyle.font3,
                   ),
                 ),

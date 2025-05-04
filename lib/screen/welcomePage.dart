@@ -1,6 +1,10 @@
 import 'package:apk/commonWidget/commonButton.dart';
 import 'package:apk/commonWidget/font&color.dart';
+import 'package:apk/firebase/classFunction.dart';
+import 'package:apk/functions/classes.dart';
+import 'package:apk/screen/UIBuilding/classList.dart';
 import 'package:apk/screen/adminPanel.dart';
+import 'package:apk/screen/popUpWindows/alertMsg.dart';
 import 'package:flutter/material.dart';
 
 String adminPassword = "";
@@ -77,10 +81,9 @@ class _welcomePageState extends State<welcomePage> {
               AppColors.color6,
               () async {
                 print('Tap on Logging');
-                // showPending(context);
-                // if(await cheackAdminPassword(context,adminPassword)){
-                //   getAllPaper(context);
-                //   FocusScope.of(context).unfocus();
+                showPending(context);
+                await getAllClass(context);
+                await buildClassList(context, allClass);
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => adminPanel()),

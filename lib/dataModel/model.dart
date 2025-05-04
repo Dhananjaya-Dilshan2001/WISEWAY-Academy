@@ -12,6 +12,8 @@ class aStudent {
   String state;
   String ID;
   Timestamp birthDay;
+  Timestamp registeredDate;
+  List<String> classID;
   String otherInfo;
   aStudent({
     required this.name,
@@ -25,6 +27,8 @@ class aStudent {
     required this.state,
     required this.ID,
     required this.birthDay,
+    required this.registeredDate,
+    required this.classID,
     required this.otherInfo,
   });
   // Method to convert a Person object to a map
@@ -41,6 +45,8 @@ class aStudent {
       'state': state,
       'ID': ID,
       'birthDay': birthDay,
+      'registeredDate': registeredDate,
+      'classID': classID,
       'otherInfo': otherInfo,
     };
   }
@@ -58,6 +64,8 @@ class aStudent {
       'state': state,
       'ID': ID,
       'birthDay': birthDay,
+      'registeredDate': registeredDate,
+      'classID': classID,
       'otherInfo': otherInfo,
     };
   }
@@ -76,6 +84,8 @@ class aStudent {
       state: map['state'],
       ID: map['ID'],
       birthDay: map['birthDay'],
+      registeredDate: map['registeredDate'],
+      classID: List<String>.from(map['classID']),
       otherInfo: map['otherInfo'],
     );
   }
@@ -92,6 +102,8 @@ class aStudent {
       state: json['state'],
       ID: json['ID'],
       birthDay: json['birthDay'],
+      registeredDate: json['registeredDate'],
+      classID: List<String>.from(json['classID']),
       otherInfo: json['otherInfo'],
     );
   }
@@ -107,6 +119,8 @@ class aClass {
   String state;
   String ID;
   String otherInfo;
+  Timestamp registeredDate;
+  List<String> students;
   aClass({
     required this.subject,
     required this.teacher,
@@ -117,6 +131,8 @@ class aClass {
     required this.state,
     required this.ID,
     required this.otherInfo,
+    required this.registeredDate,
+    required this.students,
   });
   // Method to convert a Person object to a map
   Map<String, dynamic> toMap() {
@@ -130,6 +146,8 @@ class aClass {
       'state': state,
       'ID': ID,
       'otherInfo': otherInfo,
+      'registeredDate': registeredDate,
+      'students': students,
     };
   }
 
@@ -144,6 +162,8 @@ class aClass {
       'state': state,
       'ID': ID,
       'otherInfo': otherInfo,
+      'registeredDate': registeredDate,
+      'students': students,
     };
   }
 
@@ -159,6 +179,8 @@ class aClass {
       state: map['state'],
       ID: map['ID'],
       otherInfo: map['otherInfo'],
+      registeredDate: map['registeredDate'],
+      students: List<String>.from(map['students']),
     );
   }
   factory aClass.fromJson(Map<String, dynamic> json) {
@@ -172,8 +194,134 @@ class aClass {
       state: json['state'],
       ID: json['ID'],
       otherInfo: json['otherInfo'],
+      registeredDate: json['registeredDate'],
+      students: List<String>.from(json['students']),
     );
   }
+}
+
+class aDay {
+  String time;
+  String classID;
+  Timestamp date;
+  List<String> students;
+  String otherInfo;
+  aDay({
+    required this.time,
+    required this.classID,
+    required this.date,
+    required this.students,
+    required this.otherInfo,
+  });
+  // Method to convert a Day object to a map
+  Map<String, dynamic> toMap() {
+    return {
+      'time': time,
+      'classID': classID,
+      'date': date,
+      'students': students,
+      'otherInfo': otherInfo,
+    };
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'time': time,
+      'classID': classID,
+      'date': date,
+      'students': students,
+      'otherInfo': otherInfo,
+    };
+  }
+
+  // Method to create a Day object from a map
+  factory aDay.fromMap(Map<String, dynamic> map) {
+    return aDay(
+      time: map['time'],
+      classID: map['classID'],
+      date: map['date'],
+      students: List<String>.from(map['students']),
+      otherInfo: map['otherInfo'],
+    );
+  }
+  factory aDay.fromJson(Map<String, dynamic> json) {
+    return aDay(
+      time: json['time'],
+      classID: json['classID'],
+      date: json['date'],
+      students: List<String>.from(json['students']),
+      otherInfo: json['otherInfo'],
+    );
+  }
+}
+
+class aMonth {
+  String classID;
+  List<String> paidStudents;
+  List<String> unpaidStudents;
+  List<aDay> attendance;
+  String otherInfo;
+  aMonth({
+    required this.classID,
+    required this.paidStudents,
+    required this.unpaidStudents,
+    required this.attendance,
+    required this.otherInfo,
+  });
+  // Method to convert a Month object to a map
+  Map<String, dynamic> toMap() {
+    return {
+      'classID': classID,
+      'paidStudents': paidStudents,
+      'unpaidStudents': unpaidStudents,
+      'attendance': attendance,
+      'otherInfo': otherInfo,
+    };
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'classID': classID,
+      'paidStudents': paidStudents,
+      'unpaidStudents': unpaidStudents,
+      'attendance': attendance,
+      'otherInfo': otherInfo,
+    };
+  }
+
+  // Method to create a Day object from a map
+  factory aMonth.fromMap(Map<String, dynamic> map) {
+    return aMonth(
+      classID: map['classID'],
+      paidStudents: List<String>.from(map['paidStudents']),
+      unpaidStudents: List<String>.from(map['unpaidStudents']),
+      attendance: List<aDay>.from(
+        map['attendance'].map((x) => aDay.fromMap(x)),
+      ),
+      otherInfo: map['otherInfo'],
+    );
+  }
+  factory aMonth.fromJson(Map<String, dynamic> json) {
+    return aMonth(
+      classID: json['classID'],
+      paidStudents: List<String>.from(json['paidStudents']),
+      unpaidStudents: List<String>.from(json['unpaidStudents']),
+      attendance: List<aDay>.from(
+        json['attendance'].map((x) => aDay.fromMap(x)),
+      ),
+      otherInfo: json['otherInfo'],
+    );
+  }
+}
+
+aMonth nullMonthObject() {
+  return aMonth(
+    classID: "",
+    paidStudents: [],
+    unpaidStudents: [],
+    attendance: [],
+    otherInfo: "",
+  );
 }
 
 aClass nullClassObject() {
@@ -187,6 +335,8 @@ aClass nullClassObject() {
     state: "",
     ID: "",
     otherInfo: "",
+    registeredDate: Timestamp.now(),
+    students: [],
   );
 }
 
@@ -203,6 +353,8 @@ aStudent nullStudentObject() {
     state: "",
     ID: "",
     birthDay: Timestamp.now(),
+    registeredDate: Timestamp.now(),
+    classID: [],
     otherInfo: "",
   );
 }

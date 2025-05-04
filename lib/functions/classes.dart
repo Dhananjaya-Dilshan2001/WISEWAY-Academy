@@ -1,5 +1,6 @@
 import 'package:apk/dataModel/model.dart';
 import 'package:apk/firebase/classFunction.dart';
+import 'package:apk/functions/payment.dart';
 import 'package:apk/screen/popUpWindows/alertMsg.dart';
 import 'package:flutter/material.dart';
 
@@ -7,13 +8,12 @@ List<aClass> allClass = [];
 List<Widget> classList = [];
 
 String generateClassID(BuildContext context, aClass object) {
-  String classID = "KI";
-  if (object.curriculm == "Edexcel") {
-    classID += "E";
-  } else {
-    classID += "C";
-  }
-  classID += "${object.grade}0";
+  String classID = "";
+  classID += object.curriculm == "Edexcel" ? "E" : "C";
+  classID +=
+      "${object.grade}${object.registeredDate.toDate().month.toString().padLeft(2, '0')}${object.registeredDate.toDate().day.toString().padLeft(2, '0')}-";
+  classID +=
+      "${object.subject.split(' ').first}-${object.teacher.split(' ').first}";
   return classID;
 }
 
@@ -35,5 +35,6 @@ bool isClassObjectNull(aClass object) {
 Future<void> addClassController(BuildContext context, aClass object) async {
   showPending(context);
   await addNewClass(context, object);
+  initilizePaymentForAllMonth(context, object.ID);
   print("Class registered successfully.");
 }

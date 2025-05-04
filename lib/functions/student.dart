@@ -15,7 +15,7 @@ bool isStudentObjectNull(aStudent student) {
       student.gender == "" ||
       student.state == "" ||
       student.curriculm == "" ||
-      student.ID == "") {
+      student.ID.length != 13) {
     return false;
   } else {
     return true;
@@ -23,15 +23,11 @@ bool isStudentObjectNull(aStudent student) {
 }
 
 String genarateStudentID(BuildContext context, aStudent student) {
-  getAllStudent(context);
-  int studentCount = allStudent.length;
-  String studentID = "KI";
-  if (student.curriculm == "Edexcel") {
-    studentID += "E";
-  } else {
-    studentID += "C";
-  }
-  studentID += "${student.grade}$studentCount";
+  String studentID = "";
+  studentID += student.curriculm == "Edexcel" ? "E" : "C";
+  studentID +=
+      "${student.grade}-${student.birthDay.toDate().month.toString().padLeft(2, '0')}${student.birthDay.toDate().day.toString().padLeft(2, '0')}-" +
+      "${student.registeredDate.toDate().month.toString().padLeft(2, '0')}${student.registeredDate.toDate().day.toString().padLeft(2, '0')}";
   return studentID;
 }
 
