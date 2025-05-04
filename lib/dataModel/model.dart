@@ -97,17 +97,112 @@ class aStudent {
   }
 }
 
-aStudent tempStudent = aStudent(
-  name: "",
-  school: "",
-  grade: "",
-  whatsappNo: "",
-  parentNo: "",
-  gender: "",
-  institute: "",
-  curriculm: "",
-  state: "",
-  ID: "",
-  birthDay: Timestamp.now(),
-  otherInfo: "",
-);
+class aClass {
+  String subject;
+  String teacher;
+  String grade;
+  String whatsappNo;
+  String note;
+  String curriculm;
+  String state;
+  String ID;
+  String otherInfo;
+  aClass({
+    required this.subject,
+    required this.teacher,
+    required this.grade,
+    required this.whatsappNo,
+    required this.note,
+    required this.curriculm,
+    required this.state,
+    required this.ID,
+    required this.otherInfo,
+  });
+  // Method to convert a Person object to a map
+  Map<String, dynamic> toMap() {
+    return {
+      'subject': subject,
+      'teacher': teacher,
+      'grade': grade,
+      'whatsappNo': whatsappNo,
+      'note': note,
+      'curriculm': curriculm,
+      'state': state,
+      'ID': ID,
+      'otherInfo': otherInfo,
+    };
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'subject': subject,
+      'teacher': teacher,
+      'grade': grade,
+      'whatsappNo': whatsappNo,
+      'note': note,
+      'curriculm': curriculm,
+      'state': state,
+      'ID': ID,
+      'otherInfo': otherInfo,
+    };
+  }
+
+  // Method to create a Person object from a map
+  factory aClass.fromMap(Map<String, dynamic> map) {
+    return aClass(
+      subject: map['subject'],
+      teacher: map['teacher'],
+      grade: map['grade'],
+      whatsappNo: map['whatsappNo'],
+      note: map['note'],
+      curriculm: map['curriculm'],
+      state: map['state'],
+      ID: map['ID'],
+      otherInfo: map['otherInfo'],
+    );
+  }
+  factory aClass.fromJson(Map<String, dynamic> json) {
+    return aClass(
+      subject: json['subject'],
+      teacher: json['teacher'],
+      grade: json['grade'],
+      whatsappNo: json['whatsappNo'],
+      note: json['note'],
+      curriculm: json['curriculm'],
+      state: json['state'],
+      ID: json['ID'],
+      otherInfo: json['otherInfo'],
+    );
+  }
+}
+
+aClass nullClassObject() {
+  return aClass(
+    subject: "",
+    teacher: "",
+    grade: "",
+    whatsappNo: "",
+    note: "",
+    curriculm: "",
+    state: "",
+    ID: "",
+    otherInfo: "",
+  );
+}
+
+aStudent nullStudentObject() {
+  return aStudent(
+    name: "",
+    school: "",
+    grade: "",
+    whatsappNo: "",
+    parentNo: "",
+    gender: "",
+    institute: "",
+    curriculm: "",
+    state: "",
+    ID: "",
+    birthDay: Timestamp.now(),
+    otherInfo: "",
+  );
+}

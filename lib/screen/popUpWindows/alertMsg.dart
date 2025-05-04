@@ -7,9 +7,6 @@ void showPending(BuildContext context) {
     barrierDismissible:
         false, // Prevents dismissing the dialog by tapping outside
     builder: (BuildContext context) {
-      Future.delayed(Duration(seconds: 30), () {
-        Navigator.of(context).pop(); // Close the dialog after 10 seconds
-      });
       return Dialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),

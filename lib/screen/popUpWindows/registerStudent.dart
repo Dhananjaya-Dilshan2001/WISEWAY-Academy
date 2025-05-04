@@ -405,9 +405,9 @@ class _registerStudentState extends State<registerStudent> {
                                     : AppColors.color2;
                             tapPhysical = AppColors.color2;
                             if (tapOnline == AppColors.color6) {
-                              tempStudent.state = "Online";
+                              widget.student.state = "Online";
                             } else {
-                              tempStudent.state = "Physical";
+                              widget.student.state = "Physical";
                             }
                           });
                         },
@@ -433,9 +433,9 @@ class _registerStudentState extends State<registerStudent> {
                                     : AppColors.color2;
                             tapOnline = AppColors.color2;
                             if (tapPhysical == AppColors.color6) {
-                              tempStudent.state = "Physical";
+                              widget.student.state = "Physical";
                             } else {
-                              tempStudent.state = "Online";
+                              widget.student.state = "Online";
                             }
                           });
                         },
@@ -458,10 +458,12 @@ class _registerStudentState extends State<registerStudent> {
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.005),
             GestureDetector(
-              onTap: () {
-                setState(() async {
-                  widget.student.ID =
-                      genarateStudentID(context, widget.student) as String;
+              onTap: () async {
+                setState(() {
+                  widget.student.ID = genarateStudentID(
+                    context,
+                    widget.student,
+                  );
                 });
               },
               child: Container(
@@ -476,7 +478,7 @@ class _registerStudentState extends State<registerStudent> {
                       width: MediaQuery.of(context).size.width * 0.4,
                       child: Center(
                         child: Text(
-                          "${widget.student.ID}",
+                          "${widget.student.ID.isEmpty ? "Tap to generate" : widget.student.ID}",
                           style: fontStyle.font4,
                         ),
                       ),

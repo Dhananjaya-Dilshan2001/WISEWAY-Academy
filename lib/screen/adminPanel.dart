@@ -2,10 +2,14 @@ import 'package:apk/commonWidget/commonButton.dart';
 import 'package:apk/commonWidget/drawer.dart';
 import 'package:apk/commonWidget/font&color.dart';
 import 'package:apk/dataModel/model.dart';
+import 'package:apk/firebase/studentFunctios.dart';
+import 'package:apk/functions/student.dart';
+import 'package:apk/screen/UIBuilding/studentList.dart';
 import 'package:apk/screen/classDashboard.dart';
 import 'package:apk/screen/collectPayment.dart';
 import 'package:apk/screen/paymentReport.dart';
 import 'package:apk/screen/popUpWindows/addNewClass.dart';
+import 'package:apk/screen/popUpWindows/alertMsg.dart';
 import 'package:apk/screen/popUpWindows/registerStudent.dart';
 import 'package:apk/screen/studentList.dart';
 import 'package:flutter/material.dart';
@@ -77,7 +81,7 @@ class _adminPanelState extends State<adminPanel>
                         context: context,
                         builder: (BuildContext context) {
                           return registerStudent(
-                            student: tempStudent,
+                            student: nullStudentObject(),
                           ); // Call your StatefulWidget
                         },
                       );
@@ -97,7 +101,9 @@ class _adminPanelState extends State<adminPanel>
                       await showDialog(
                         context: context,
                         builder: (BuildContext context) {
-                          return addNewClass(); // Call your StatefulWidget
+                          return addNewClass(
+                            object: nullClassObject(),
+                          ); // Call your StatefulWidget
                         },
                       );
                       // Perform any action here
@@ -127,9 +133,9 @@ class _adminPanelState extends State<adminPanel>
                     () async {
                       // studentList= [];
                       print('Tap View All Students');
-                      // showPending(context);
-                      // await getAllStudent(context);
-                      // await sortTrigger(context);
+                      showPending(context);
+                      await getAllStudent(context);
+                      await buildStudentList(context, allStudent);
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => StudentList()),

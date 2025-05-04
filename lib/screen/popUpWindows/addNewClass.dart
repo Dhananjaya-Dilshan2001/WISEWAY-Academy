@@ -1,15 +1,23 @@
 import 'package:apk/commonWidget/commonButton.dart';
 import 'package:apk/commonWidget/font&color.dart';
+import 'package:apk/dataModel/model.dart';
+import 'package:apk/functions/classes.dart';
+import 'package:apk/screen/popUpWindows/alertMsg.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class addNewClass extends StatefulWidget {
-  const addNewClass({super.key});
+  final aClass object;
+  const addNewClass({super.key, required this.object});
   @override
   State<addNewClass> createState() => _addNewClassState();
 }
 
 class _addNewClassState extends State<addNewClass> {
+  Color tapCambridge = AppColors.color6;
+  Color tapEdexcel = AppColors.color2;
+  Color tapOnline = AppColors.color2;
+  Color tapPhysical = AppColors.color6;
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -50,7 +58,7 @@ class _addNewClassState extends State<addNewClass> {
                       maxLines: null,
                       keyboardType: TextInputType.multiline,
                       onChanged: (value) {
-                        //tempStudent.name = value;
+                        widget.object.subject = value;
                       },
                     ),
                   ),
@@ -83,7 +91,7 @@ class _addNewClassState extends State<addNewClass> {
                       maxLines: null,
                       keyboardType: TextInputType.multiline,
                       onChanged: (value) {
-                        //tempStudent.name = value;
+                        widget.object.teacher = value;
                       },
                     ),
                   ),
@@ -111,7 +119,17 @@ class _addNewClassState extends State<addNewClass> {
                   child: TextField(
                     //keyboardType: TextInputType.number,
                     style: fontStyle.font4,
-                    decoration: InputDecoration(),
+                    decoration: InputDecoration(
+                      counterStyle: TextStyle(
+                        color:
+                            AppColors
+                                .color4, // Change the color of the max length counter
+                      ),
+                    ),
+                    maxLength: 2, // Limits input to 2 characters
+                    onChanged: (value) {
+                      widget.object.grade = value;
+                    },
                     //controller: gradecontroller,
                   ),
                 ),
@@ -143,7 +161,7 @@ class _addNewClassState extends State<addNewClass> {
                       maxLines: null,
                       keyboardType: TextInputType.multiline,
                       onChanged: (value) {
-                        //tempStudent.name = value;
+                        widget.object.note = value;
                       },
                     ),
                   ),
@@ -174,7 +192,7 @@ class _addNewClassState extends State<addNewClass> {
                     decoration: InputDecoration(),
                     inputFormatters: [LengthLimitingTextInputFormatter(10)],
                     onChanged: (value) {
-                      //tempStudent.whatsappNo = value;
+                      widget.object.whatsappNo = value;
                     },
                   ),
                 ),
@@ -195,18 +213,13 @@ class _addNewClassState extends State<addNewClass> {
                       GestureDetector(
                         onTap: () {
                           setState(() {
-                            // tapCambridge =
-                            //     tapCambridge == AppColors.color1
-                            //         ? AppColors.color5
-                            //         : AppColors.color1;
-                            // tapEdexcel = AppColors.color1;
-                            // if (tapCambridge == AppColors.color5) {
-                            //   tempStudent.curriculm = "Cambridge";
-                            //   genarateStudentID(context);
-                            // } else {
-                            //   tempStudent.curriculm = "Edexcel";
-                            //   genarateStudentID(context);
-                            // }
+                            tapCambridge = AppColors.color6;
+                            tapEdexcel = AppColors.color2;
+                            if (tapCambridge == AppColors.color6) {
+                              widget.object.curriculm = "Cambridge";
+                            } else {
+                              widget.object.curriculm = "Edexcel";
+                            }
                           });
                         },
                         child: Container(
@@ -216,7 +229,7 @@ class _addNewClassState extends State<addNewClass> {
                             child: Text("Cambridge", style: fontStyle.font4),
                           ),
                           decoration: BoxDecoration(
-                            color: AppColors.color6,
+                            color: tapCambridge,
                             borderRadius: BorderRadius.circular(5.0),
                           ),
                         ),
@@ -225,18 +238,13 @@ class _addNewClassState extends State<addNewClass> {
                       GestureDetector(
                         onTap: () {
                           setState(() {
-                            // tapEdexcel =
-                            //     tapEdexcel == AppColors.color1
-                            //         ? AppColors.color5
-                            //         : AppColors.color1;
-                            // tapCambridge = AppColors.color1;
-                            // if (tapEdexcel == AppColors.color5) {
-                            //   tempStudent.curriculm = "Edexcel";
-                            //   genarateStudentID(context);
-                            // } else {
-                            //   tempStudent.curriculm = "Cambridge";
-                            //   genarateStudentID(context);
-                            // }
+                            tapCambridge = AppColors.color2;
+                            tapEdexcel = AppColors.color6;
+                            if (tapEdexcel == AppColors.color6) {
+                              widget.object.curriculm = "Edexcel";
+                            } else {
+                              widget.object.curriculm = "Cambridge";
+                            }
                           });
                         },
                         child: Container(
@@ -246,7 +254,7 @@ class _addNewClassState extends State<addNewClass> {
                             child: Text("Edexcel", style: fontStyle.font4),
                           ),
                           decoration: BoxDecoration(
-                            color: AppColors.color2,
+                            color: tapEdexcel,
                             borderRadius: BorderRadius.circular(5.0),
                           ),
                         ),
@@ -266,16 +274,13 @@ class _addNewClassState extends State<addNewClass> {
                       GestureDetector(
                         onTap: () {
                           setState(() {
-                            // tapNewStudent =
-                            //     tapNewStudent == AppColors.color1
-                            //         ? AppColors.color5
-                            //         : AppColors.color1;
-                            // tapOldStudent = AppColors.color1;
-                            // if (tapNewStudent == AppColors.color5) {
-                            //   tempStudent.state = "New";
-                            // } else {
-                            //   tempStudent.state = "Old";
-                            // }
+                            tapOnline = AppColors.color6;
+                            tapPhysical = AppColors.color2;
+                            if (tapOnline == AppColors.color6) {
+                              widget.object.state = "Online";
+                            } else {
+                              widget.object.state = "Physical";
+                            }
                           });
                         },
                         child: Container(
@@ -285,7 +290,7 @@ class _addNewClassState extends State<addNewClass> {
                             child: Text("Online", style: fontStyle.font4),
                           ),
                           decoration: BoxDecoration(
-                            color: AppColors.color6,
+                            color: tapOnline,
                             borderRadius: BorderRadius.circular(5.0),
                           ),
                         ),
@@ -294,16 +299,13 @@ class _addNewClassState extends State<addNewClass> {
                       GestureDetector(
                         onTap: () {
                           setState(() {
-                            // tapOldStudent =
-                            //     tapOldStudent == AppColors.color1
-                            //         ? AppColors.color5
-                            //         : AppColors.color1;
-                            // tapNewStudent = AppColors.color1;
-                            // if (tapOldStudent == AppColors.color5) {
-                            //   tempStudent.state = "Old";
-                            // } else {
-                            //   tempStudent.state = "New";
-                            // }
+                            tapOnline = AppColors.color2;
+                            tapPhysical = AppColors.color6;
+                            if (tapPhysical == AppColors.color6) {
+                              widget.object.state = "Physical";
+                            } else {
+                              widget.object.state = "Online";
+                            }
                           });
                         },
                         child: Container(
@@ -313,7 +315,7 @@ class _addNewClassState extends State<addNewClass> {
                             child: Text("Physical", style: fontStyle.font4),
                           ),
                           decoration: BoxDecoration(
-                            color: AppColors.color2,
+                            color: tapPhysical,
                             borderRadius: BorderRadius.circular(5.0),
                           ),
                         ),
@@ -331,15 +333,28 @@ class _addNewClassState extends State<addNewClass> {
               child: Column(
                 children: [
                   Text("Class ID", style: fontStyle.font2),
-                  Container(
-                    height: 30,
-                    width: MediaQuery.of(context).size.width * 0.4,
-                    child: Center(
-                      child: Text("{tempStudent.ID}", style: fontStyle.font4),
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.color6,
-                      borderRadius: BorderRadius.circular(5.0),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        widget.object.ID = generateClassID(
+                          context,
+                          widget.object,
+                        );
+                      });
+                    },
+                    child: Container(
+                      height: 30,
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      child: Center(
+                        child: Text(
+                          "${widget.object.ID.isEmpty ? "Tap to generate" : widget.object.ID}",
+                          style: fontStyle.font4,
+                        ),
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.color6,
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
                     ),
                   ),
                 ],
@@ -366,7 +381,23 @@ class _addNewClassState extends State<addNewClass> {
                   AppColors.color6,
                   () async {
                     print('Tap on Register');
-                    //cheackTempStudentNull(context);
+                    if (isClassObjectNull(widget.object)) {
+                      popUpMsg(
+                        context,
+                        AppColors.color2,
+                        "Ready to Register..!",
+                        "All details are correct..?",
+                        () => addClassController(context, widget.object),
+                      );
+                    } else {
+                      popUpMsg(
+                        context,
+                        AppColors.color6,
+                        "Error",
+                        "Fill the all details and try again..!",
+                        () => Navigator.of(context).pop(),
+                      );
+                    }
                   },
                   AppColors.color4,
                 ),
