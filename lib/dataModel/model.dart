@@ -206,12 +206,14 @@ class aDay {
   Timestamp date;
   List<String> students;
   String otherInfo;
+  String state;
   aDay({
     required this.time,
     required this.classID,
     required this.date,
     required this.students,
     required this.otherInfo,
+    required this.state,
   });
   // Method to convert a Day object to a map
   Map<String, dynamic> toMap() {
@@ -221,6 +223,7 @@ class aDay {
       'date': date,
       'students': students,
       'otherInfo': otherInfo,
+      'state': state,
     };
   }
 
@@ -231,6 +234,7 @@ class aDay {
       'date': date,
       'students': students,
       'otherInfo': otherInfo,
+      'state': state,
     };
   }
 
@@ -242,6 +246,7 @@ class aDay {
       date: map['date'],
       students: List<String>.from(map['students']),
       otherInfo: map['otherInfo'],
+      state: map['state'],
     );
   }
   factory aDay.fromJson(Map<String, dynamic> json) {
@@ -251,17 +256,20 @@ class aDay {
       date: json['date'],
       students: List<String>.from(json['students']),
       otherInfo: json['otherInfo'],
+      state: json['state'],
     );
   }
 }
 
 class aMonth {
+  String name;
   String classID;
   List<String> paidStudents;
   List<String> unpaidStudents;
   List<aDay> attendance;
   String otherInfo;
   aMonth({
+    required this.name,
     required this.classID,
     required this.paidStudents,
     required this.unpaidStudents,
@@ -274,17 +282,22 @@ class aMonth {
       'classID': classID,
       'paidStudents': paidStudents,
       'unpaidStudents': unpaidStudents,
-      'attendance': attendance,
+      'attendance': attendance.map((day) => day.toMap()).toList(),
       'otherInfo': otherInfo,
+      'name': name,
     };
   }
 
   Map<String, dynamic> toJson() {
     return {
+      'name': name,
       'classID': classID,
       'paidStudents': paidStudents,
       'unpaidStudents': unpaidStudents,
-      'attendance': attendance,
+      'attendance':
+          attendance
+              .map((day) => day.toJson())
+              .toList(), // Serialize each aDay object
       'otherInfo': otherInfo,
     };
   }
@@ -292,30 +305,46 @@ class aMonth {
   // Method to create a Day object from a map
   factory aMonth.fromMap(Map<String, dynamic> map) {
     return aMonth(
+      name: map['name'],
       classID: map['classID'],
       paidStudents: List<String>.from(map['paidStudents']),
       unpaidStudents: List<String>.from(map['unpaidStudents']),
-      attendance: List<aDay>.from(
-        map['attendance'].map((x) => aDay.fromMap(x)),
-      ),
+      attendance:
+          (map['attendance'] as List<dynamic>)
+              .map((paperMap) => aDay.fromMap(paperMap))
+              .toList(),
       otherInfo: map['otherInfo'],
     );
   }
   factory aMonth.fromJson(Map<String, dynamic> json) {
     return aMonth(
+      name: json['name'],
       classID: json['classID'],
       paidStudents: List<String>.from(json['paidStudents']),
       unpaidStudents: List<String>.from(json['unpaidStudents']),
-      attendance: List<aDay>.from(
-        json['attendance'].map((x) => aDay.fromMap(x)),
-      ),
+      attendance:
+          (json['attendance'] as List<dynamic>)
+              .map((paperJson) => aDay.fromJson(paperJson))
+              .toList(),
       otherInfo: json['otherInfo'],
     );
   }
 }
 
+aDay nullDayObject() {
+  return aDay(
+    time: "",
+    classID: "",
+    date: Timestamp.now(),
+    students: [],
+    otherInfo: "",
+    state: "",
+  );
+}
+
 aMonth nullMonthObject() {
   return aMonth(
+    name: "",
     classID: "",
     paidStudents: [],
     unpaidStudents: [],

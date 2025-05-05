@@ -1,14 +1,41 @@
 import 'package:apk/commonWidget/commonButton.dart';
 import 'package:apk/commonWidget/font&color.dart';
+import 'package:apk/dataModel/model.dart';
+import 'package:apk/functions/classes.dart';
 import 'package:flutter/material.dart';
 
 class attendStudent extends StatefulWidget {
-  const attendStudent({Key? key}) : super(key: key);
+  final int indexOfDay;
+  final aClass classObject;
+  final aDay day;
+  final aStudent student;
+  final int monthIndex;
+  final aMonth month;
+  const attendStudent({
+    Key? key,
+    required this.indexOfDay,
+    required this.classObject,
+    required this.day,
+    required this.student,
+    required this.monthIndex,
+    required this.month,
+  }) : super(key: key);
   @override
   State<attendStudent> createState() => _attendStudentState();
 }
 
 class _attendStudentState extends State<attendStudent> {
+  Color tapOnline = AppColors.color2;
+  Color tapPhysical = AppColors.color6;
+  String state = "Physical";
+
+  initState() {
+    tapOnline = AppColors.color2;
+    tapPhysical = AppColors.color6;
+    state = "Physical";
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -19,9 +46,7 @@ class _attendStudentState extends State<attendStudent> {
         width: MediaQuery.of(context).size.width * 0.9,
         child: Column(
           children: [
-            Center(
-              child: Text("Student Payment Details", style: fontStyle.font3),
-            ),
+            Center(child: Text("Attend Student", style: fontStyle.font3)),
             Center(
               child: Container(
                 height: 1,
@@ -61,8 +86,8 @@ class _attendStudentState extends State<attendStudent> {
                       bottom: 0.0, // Bottom padding
                     ),
                     child: Text(
-                      "Thinuka Sasvindu \nKICA25003"
-                      "\nGrade 10 - Edexcel ",
+                      "${widget.student.name} \n${widget.student.ID}"
+                      "\nGrade ${widget.student.grade} - ${widget.student.curriculm} ",
                       style: fontStyle.font3,
                     ),
                   ),
@@ -89,18 +114,11 @@ class _attendStudentState extends State<attendStudent> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          // setState(() {
-                          //   tapPP =
-                          //       tapPP == AppColors.color1
-                          //           ? AppColors.color5
-                          //           : AppColors.color1;
-                          //   tapPU = AppColors.color1;
-                          //   if (tapPP == AppColors.color5) {
-                          //     widget.object.payment = 1;
-                          //   } else {
-                          //     widget.object.payment = 0;
-                          //   }
-                          // });
+                          setState(() {
+                            tapOnline = AppColors.color6;
+                            tapPhysical = AppColors.color2;
+                            state = "Online";
+                          });
                         },
                         child: Container(
                           padding: EdgeInsets.all(5.0),
@@ -108,7 +126,7 @@ class _attendStudentState extends State<attendStudent> {
                             child: Text("Online", style: fontStyle.font4),
                           ),
                           decoration: BoxDecoration(
-                            color: AppColors.color2,
+                            color: tapOnline,
                             borderRadius: BorderRadius.circular(5.0),
                           ),
                         ),
@@ -116,18 +134,11 @@ class _attendStudentState extends State<attendStudent> {
                       SizedBox(width: 3),
                       GestureDetector(
                         onTap: () {
-                          // setState(() {
-                          //   tapPU =
-                          //       tapPU == AppColors.color1
-                          //           ? AppColors.color5
-                          //           : AppColors.color1;
-                          //   tapPP = AppColors.color1;
-                          //   if (tapPU == AppColors.color5) {
-                          //     dummyStudentPaper.payment = 0;
-                          //   } else {
-                          //     dummyStudentPaper.payment = 1;
-                          //   }
-                          // });
+                          setState(() {
+                            tapOnline = AppColors.color2;
+                            tapPhysical = AppColors.color6;
+                            state = "Physical";
+                          });
                         },
                         child: Container(
                           padding: EdgeInsets.all(5.0),
@@ -137,7 +148,7 @@ class _attendStudentState extends State<attendStudent> {
                             child: Text("Physical", style: fontStyle.font4),
                           ),
                           decoration: BoxDecoration(
-                            color: AppColors.color6,
+                            color: tapPhysical,
                             borderRadius: BorderRadius.circular(5.0),
                           ),
                         ),
@@ -164,16 +175,20 @@ class _attendStudentState extends State<attendStudent> {
                 SizedBox(width: MediaQuery.of(context).size.width * 0.08),
                 commonButton.button4(
                   MediaQuery.of(context).size.width * 0.3,
-                  "Update",
+                  "Attend",
                   AppColors.color6,
                   () async {
                     print('Tap on Update');
-                    //updateStudentDetailsOnPaper(
-                    //   context,
-                    //   widget.object,
-                    //   widget.index,
-                    // );
-                    //Navigator.of(context).pop();
+                    markAttendace(
+                      context,
+                      widget.classObject,
+                      widget.month,
+                      widget.monthIndex,
+                      widget.indexOfDay,
+                      widget.student.ID + " $state",
+                      widget.day,
+                    );
+                    Navigator.of(context).pop();
                   },
                   AppColors.color4,
                 ),

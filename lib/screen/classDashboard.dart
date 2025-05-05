@@ -1,14 +1,18 @@
 import 'package:apk/commonWidget/font&color.dart';
 import 'package:apk/dataModel/model.dart';
+import 'package:apk/firebase/studentFunctios.dart';
+import 'package:apk/functions/payment.dart';
+import 'package:apk/functions/student.dart';
+import 'package:apk/screen/UIBuilding/viewAllStudent.dart';
 import 'package:apk/screen/adminPanel.dart';
 import 'package:apk/screen/popUpWindows/addDay.dart';
 import 'package:apk/screen/popUpWindows/allStudent.dart';
-import 'package:apk/screen/popUpWindows/updateStudent.dart';
 import 'package:flutter/material.dart';
 
 class Classdashboard extends StatefulWidget {
   final aClass object;
-  const Classdashboard({super.key, required this.object});
+  final aMonth month;
+  const Classdashboard({super.key, required this.object, required this.month});
   @override
   State<Classdashboard> createState() => _ClassdashboardState();
 }
@@ -137,10 +141,24 @@ class _ClassdashboardState extends State<Classdashboard> {
               children: [
                 GestureDetector(
                   onTap: () async {
+                    await getAllStudent(context);
+                    await buildStudentListOnViewStudent(
+                      context,
+                      widget.object,
+                      fetchStudentByIDs(widget.object.students, allStudent),
+                      false,
+                      false,
+                      0,
+                      nullMonthObject(),
+                      0,
+                    );
                     await showDialog(
                       context: context,
                       builder: (BuildContext context) {
-                        return viewAllStudent(); // Call your StatefulWidget
+                        return viewAllStudent(
+                          title: "Registered Students",
+                          list: viewStudent,
+                        ); // Call your StatefulWidget with parameters
                       },
                     );
                   },
@@ -162,7 +180,26 @@ class _ClassdashboardState extends State<Classdashboard> {
                 SizedBox(width: MediaQuery.of(context).size.width * 0.03),
                 GestureDetector(
                   onTap: () async {
-                    //viewAllStudentController(context);
+                    await getAllStudent(context);
+                    await buildStudentListOnViewStudent(
+                      context,
+                      widget.object,
+                      allStudent,
+                      true,
+                      false,
+                      0,
+                      nullMonthObject(),
+                      0,
+                    );
+                    await showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return viewAllStudent(
+                          title: "Add Student to Class",
+                          list: viewStudent,
+                        ); // Call your StatefulWidget with parameters
+                      },
+                    );
                   },
                   child: Container(
                     height: MediaQuery.of(context).size.width * 0.1,
@@ -244,7 +281,7 @@ class _ClassdashboardState extends State<Classdashboard> {
                         ),
                       ),
                       SizedBox(width: MediaQuery.of(context).size.width * 0.03),
-                      Text("January", style: fontStyle.font2),
+                      Text("${widget.month.name}", style: fontStyle.font2),
                       SizedBox(width: MediaQuery.of(context).size.width * 0.03),
                       GestureDetector(
                         onTap: () async {
@@ -269,168 +306,38 @@ class _ClassdashboardState extends State<Classdashboard> {
           ),
           //SizedBox(height: MediaQuery.of(context).size.height * 0.01),
           Container(
-            height: MediaQuery.of(context).size.height * 0.45,
+            height: MediaQuery.of(context).size.height * 0.35,
             width: MediaQuery.of(context).size.width * 0.9,
             decoration: BoxDecoration(
               //color: AppColors.color2,
               borderRadius: BorderRadius.circular(5),
             ),
-            child: ListView(
-              children: [
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.06,
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  decoration: BoxDecoration(
-                    color:
-                        AppColors
-                            .color4, // Set the background color of the container
-                    borderRadius: BorderRadius.circular(
-                      10.0,
-                    ), // Set the corner radius
-                  ),
-                  child: Row(
-                    children: [
-                      SizedBox(width: MediaQuery.of(context).size.width * 0.02),
-                      Container(
-                        height: MediaQuery.of(context).size.height * 0.04,
-                        width: MediaQuery.of(context).size.width * 0.1,
-                        decoration: BoxDecoration(
-                          color:
-                              AppColors
-                                  .color2, // Set the background color of the container
-                          borderRadius: BorderRadius.circular(
-                            8.0,
-                          ), // Set the corner radius
-                        ),
-                        child: Center(
-                          child: Text("01", style: fontStyle.font3),
-                        ),
-                      ),
+            child: ListView(children: dayList),
+          ),
+          GestureDetector(
+            onTap: () async {
+              await showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return addDay(
+                    monthIndex: 0,
+                    monthObject: widget.month,
 
-                      SizedBox(width: MediaQuery.of(context).size.width * 0.02),
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              alignment: Alignment.centerLeft,
-                              height: MediaQuery.of(context).size.height * 0.03,
-                              //color: AppColors.color2,
-                              child: Text(
-                                "Thursday - 05/03",
-                                style: fontStyle.font4.copyWith(
-                                  fontSize:
-                                      MediaQuery.of(context).size.height *
-                                      0.02, // Set font size
-                                  color: AppColors.color2, // Set font color
-                                  fontWeight: FontWeight.bold, // Set bold font
-                                ),
-                              ),
-                            ),
-                            // Line spacing decreased further
-                            Container(
-                              alignment: Alignment.centerLeft,
-                              height: MediaQuery.of(context).size.height * 0.02,
-                              //color: AppColors.color2,
-                              child: Text(
-                                "04.00 PM - 06.00 PM",
-                                style: fontStyle.font4.copyWith(
-                                  fontSize:
-                                      MediaQuery.of(context).size.height *
-                                      0.015, // Set font size
-                                  color: AppColors.color2, // Set font color
-                                  fontWeight: FontWeight.bold, // Set bold font
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      //SizedBox(width: MediaQuery.of(context).size.width * 0),
-                      GestureDetector(
-                        onTap: () async {
-                          await showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return viewAllStudent(); // Call your StatefulWidget
-                            },
-                          );
-                        },
-                        child: Container(
-                          height: MediaQuery.of(context).size.width * 0.1,
-                          width: MediaQuery.of(context).size.width * 0.14,
-                          decoration: BoxDecoration(
-                            color: AppColors.color2,
-                            borderRadius: BorderRadius.circular(
-                              8,
-                            ), // Add radius instead of circle
-                          ),
-                          child: Icon(
-                            Icons.group,
-                            color: Colors.white,
-                          ), // Changed icon to person
-                        ),
-                      ),
-                      SizedBox(width: MediaQuery.of(context).size.width * 0.02),
-                      SizedBox(
-                        child: Container(color: AppColors.color1),
-                        width: MediaQuery.of(context).size.width * 0.02,
-                      ),
-                      GestureDetector(
-                        onTap: () async {
-                          await showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return attendStudent(); // Call your StatefulWidget
-                            },
-                          );
-                        },
-                        child: Container(
-                          height: MediaQuery.of(context).size.height * 0.06,
-                          width: MediaQuery.of(context).size.width * 0.18,
-                          decoration: BoxDecoration(
-                            color: AppColors.color6,
-                            borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(8),
-                              bottomRight: Radius.circular(8),
-                            ),
-                          ),
-                          child: Icon(
-                            Icons.qr_code_scanner,
-                            color: Colors.white,
-                            size: MediaQuery.of(context).size.height * 0.04,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-                GestureDetector(
-                  onTap: () async {
-                    await showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return addDay(); // Call your StatefulWidget
-                      },
-                    );
-                    //viewAllStudentController(context);
-                  },
-                  child: Container(
-                    height: MediaQuery.of(context).size.width * 0.1,
-                    width: MediaQuery.of(context).size.width * 0.1,
-                    child: Icon(Icons.add, color: Colors.white),
-                    decoration: BoxDecoration(
-                      color: AppColors.color6,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                ),
-              ],
+                    classObject: widget.object,
+                    object: nullDayObject(),
+                  ); // Call your StatefulWidget
+                },
+              );
+              //viewAllStudentController(context);
+            },
+            child: Container(
+              height: MediaQuery.of(context).size.width * 0.1,
+              width: MediaQuery.of(context).size.width * 0.1,
+              child: Icon(Icons.add, color: Colors.white),
+              decoration: BoxDecoration(
+                color: AppColors.color6,
+                shape: BoxShape.circle,
+              ),
             ),
           ),
         ],

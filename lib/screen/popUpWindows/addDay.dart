@@ -1,16 +1,40 @@
 import 'package:apk/commonWidget/commonButton.dart';
 import 'package:apk/commonWidget/font&color.dart';
+import 'package:apk/dataModel/model.dart';
+import 'package:apk/functions/day.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class addDay extends StatefulWidget {
-  const addDay({super.key});
+  final aClass classObject;
+  final aDay object;
+  final aMonth monthObject;
+  final int monthIndex;
+  const addDay({
+    super.key,
+    required this.object,
+    required this.classObject,
+    required this.monthObject,
+    required this.monthIndex,
+  });
   @override
   State<addDay> createState() => _addDayState();
 }
 
 class _addDayState extends State<addDay> {
+  Color tapOnline = AppColors.color2;
+  Color tapPhysical = AppColors.color6;
+
+  @override
+  void initState() {
+    widget.object.state = "Physical";
+    widget.object.time = widget.classObject.note.split(' ').skip(1).join(' ');
+    widget.object.otherInfo = widget.classObject.note.split(' ').first;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -29,7 +53,7 @@ class _addDayState extends State<addDay> {
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.02),
             Text(
-              "Grade 10 - Edexcel\nComputer Science",
+              "Grade ${widget.classObject.grade} - ${widget.classObject.curriculm}\n${widget.classObject.subject}",
               style: fontStyle.font2,
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.02),
@@ -53,7 +77,9 @@ class _addDayState extends State<addDay> {
                   child: DateTimeField(
                     decoration: InputDecoration(
                       // Dark background for the input field
-                      labelText: 'year}/month}/day}',
+                      labelText:
+                          '${widget.object.date.toDate().day.toString().padLeft(2, '0')}'
+                          '/${widget.object.date.toDate().day.toString().padLeft(2, '0')}/${widget.object.date.toDate().year.toString().padLeft(2, '0')}',
                       labelStyle: fontStyle.font4.copyWith(
                         color: Colors.white,
                       ), // White text color
@@ -67,6 +93,7 @@ class _addDayState extends State<addDay> {
                     mode: DateTimeFieldPickerMode.date,
                     onChanged: (DateTime? value) {
                       setState(() {
+                        widget.object.date = Timestamp.fromDate(value!);
                         //tempPaper.date = value!;
                       });
                     },
@@ -96,11 +123,18 @@ class _addDayState extends State<addDay> {
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.symmetric(horizontal: 10),
                         border: OutlineInputBorder(),
+                        hintText:
+                            widget
+                                .object
+                                .time, // Display string after the first space
+                        hintStyle: fontStyle.font4.copyWith(
+                          color: Colors.white, // Set hint text color to white
+                        ),
                       ),
                       maxLines: null,
                       keyboardType: TextInputType.multiline,
                       onChanged: (value) {
-                        //tempStudent.name = value;
+                        widget.object.time = value;
                       },
                     ),
                   ),
@@ -115,7 +149,7 @@ class _addDayState extends State<addDay> {
                   height: 25,
                   width: MediaQuery.of(context).size.width * 0.15,
                   //color: AppColors.color5,
-                  child: Text("Note", style: fontStyle.font4),
+                  child: Text("Day", style: fontStyle.font4),
                 ),
                 Container(
                   height: 25,
@@ -130,11 +164,18 @@ class _addDayState extends State<addDay> {
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.symmetric(horizontal: 10),
                         border: OutlineInputBorder(),
+                        hintText:
+                            widget
+                                .object
+                                .otherInfo, // Display only the first part of the string
+                        hintStyle: fontStyle.font4.copyWith(
+                          color: Colors.white, // Set hint text color to white
+                        ),
                       ),
                       maxLines: null,
                       keyboardType: TextInputType.multiline,
                       onChanged: (value) {
-                        //tempStudent.name = value;
+                        widget.object.otherInfo = value;
                       },
                     ),
                   ),
@@ -161,16 +202,9 @@ class _addDayState extends State<addDay> {
                       GestureDetector(
                         onTap: () {
                           setState(() {
-                            // tapMale =
-                            //     tapMale == AppColors.color1
-                            //         ? AppColors.color5
-                            //         : AppColors.color1;
-                            // tapFemale = AppColors.color1;
-                            // if (tapMale == AppColors.color5) {
-                            //   tempStudent.gender = "Male";
-                            // } else {
-                            //   tempStudent.gender = "Female";
-                            // }
+                            tapOnline = AppColors.color6;
+                            tapPhysical = AppColors.color2;
+                            widget.object.state = "Online";
                           });
                         },
                         child: Container(
@@ -180,7 +214,7 @@ class _addDayState extends State<addDay> {
                             child: Text("Online", style: fontStyle.font4),
                           ),
                           decoration: BoxDecoration(
-                            color: AppColors.color6,
+                            color: tapOnline,
                             borderRadius: BorderRadius.circular(5.0),
                           ),
                         ),
@@ -189,26 +223,19 @@ class _addDayState extends State<addDay> {
                       GestureDetector(
                         onTap: () {
                           setState(() {
-                            // tapFemale =
-                            //     tapFemale == AppColors.color1
-                            //         ? AppColors.color5
-                            //         : AppColors.color1;
-                            // tapMale = AppColors.color1;
-                            // if (tapFemale == AppColors.color5) {
-                            //   tempStudent.gender = "Female";
-                            // } else {
-                            //   tempStudent.gender = "Male";
-                            // }
+                            tapPhysical = AppColors.color6;
+                            tapOnline = AppColors.color2;
+                            widget.object.state = "Physical";
                           });
                         },
                         child: Container(
                           height: 40,
                           width: 60,
                           child: Center(
-                            child: Text("Cash", style: fontStyle.font4),
+                            child: Text("Physical", style: fontStyle.font4),
                           ),
                           decoration: BoxDecoration(
-                            color: AppColors.color2,
+                            color: tapPhysical,
                             borderRadius: BorderRadius.circular(5.0),
                           ),
                         ),
@@ -228,7 +255,6 @@ class _addDayState extends State<addDay> {
                   AppColors.color3,
                   () async {
                     print('Tap on Cancel');
-                    //tempStudent.setAllNull();
                     Navigator.of(context).pop();
                   },
                   AppColors.color4,
@@ -239,8 +265,14 @@ class _addDayState extends State<addDay> {
                   "Add",
                   AppColors.color6,
                   () async {
-                    print('Tap on Register');
-                    //cheackTempStudentNull(context);
+                    print('Tap on Add');
+                    addDayController(
+                      context,
+                      widget.classObject,
+                      widget.monthObject,
+                      widget.monthIndex,
+                      widget.object,
+                    );
                   },
                   AppColors.color4,
                 ),

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 List<aStudent> allStudent = [];
 List<Widget> studentList = [];
+List<Widget> viewStudent = [];
 
 bool isStudentObjectNull(aStudent student) {
   if (student.name == "" ||
@@ -38,4 +39,13 @@ Future<void> registerStudentController(
   showPending(context);
   await addNewStudent(context, student);
   print("Student registered successfully.");
+}
+
+List<aStudent> fetchStudentByIDs(
+  List<String> studentIDs,
+  List<aStudent> allStudents,
+) {
+  return allStudents
+      .where((student) => studentIDs.contains(student.ID))
+      .toList();
 }

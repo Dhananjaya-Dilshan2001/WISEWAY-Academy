@@ -1,7 +1,10 @@
 import 'package:apk/commonWidget/font&color.dart';
 import 'package:apk/dataModel/model.dart';
 import 'package:apk/functions/classes.dart';
+import 'package:apk/functions/payment.dart';
+import 'package:apk/screen/UIBuilding/dayList.dart';
 import 'package:apk/screen/classDashboard.dart';
+import 'package:apk/screen/popUpWindows/alertMsg.dart';
 import 'package:flutter/material.dart';
 
 GestureDetector listCardOnClassList(
@@ -16,10 +19,31 @@ GestureDetector listCardOnClassList(
 ) {
   //print("Student Name Is ${name[0]} ${name[1]}");
   return GestureDetector(
-    onTap: () {
+    onTap: () async {
+      showPending(context);
+      List<aMonth>? payment = await getPaymentController(
+        context,
+        "2025",
+        object.ID,
+      );
+      if (payment != null && payment.isNotEmpty) {
+        await buildDayList(
+          context,
+          0,
+          payment[0],
+          object,
+          payment[0].attendance,
+        );
+      }
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => Classdashboard(object: object)),
+        MaterialPageRoute(
+          builder:
+              (context) => Classdashboard(
+                object: object,
+                month: payment?[0] ?? nullMonthObject(),
+              ),
+        ),
       );
     },
     child: Container(

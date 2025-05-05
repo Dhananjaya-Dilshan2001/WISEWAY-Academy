@@ -18,6 +18,14 @@ class _addNewClassState extends State<addNewClass> {
   Color tapEdexcel = AppColors.color2;
   Color tapOnline = AppColors.color2;
   Color tapPhysical = AppColors.color6;
+
+  initeState() {
+    super.initState();
+    widget.object.curriculm = "Cambridge";
+    widget.object.state = "Physical";
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(

@@ -24,6 +24,14 @@ class _registerStudentState extends State<registerStudent> {
   Color tapPhysical = AppColors.color6;
 
   @override
+  void initState() {
+    widget.student.gender = "Male";
+    widget.student.curriculm = "Cambridge";
+    widget.student.state = "Physical";
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: AppColors.color2,

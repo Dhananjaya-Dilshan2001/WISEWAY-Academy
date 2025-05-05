@@ -1,4 +1,5 @@
 import 'package:apk/commonWidget/font&color.dart';
+import 'package:apk/dataModel/model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -34,6 +35,211 @@ Future<void> InitilizeFireBaseClassPayment(
           duration: Duration(seconds: 4),
         ),
       );
+    }
+  } on FirebaseException catch (e) {
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: AppColors.color6,
+          content: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                Icon(Icons.warning_amber, color: AppColors.color3),
+                SizedBox(width: 10),
+                Text('Error: ${e.message}'),
+              ],
+            ),
+          ),
+          duration: Duration(seconds: 5),
+        ),
+      );
+    }
+  }
+}
+
+Future<List<aMonth>?> getPaymentDetails(
+  BuildContext context,
+  String year,
+  String classID,
+) async {
+  try {
+    DocumentReference documentRef = _firestore
+        .collection('Payment')
+        .doc(classID);
+
+    DocumentSnapshot documentSnapshot = await documentRef.get();
+
+    if (documentSnapshot.exists) {
+      Map<String, dynamic>? data =
+          documentSnapshot.data() as Map<String, dynamic>?;
+      List<Map<String, dynamic>>? paymentDetails =
+          data?[year]?.cast<Map<String, dynamic>>();
+
+      if (paymentDetails != null) {
+        List<aMonth> convertedDetails =
+            paymentDetails
+                .map((monthData) => aMonth.fromJson(monthData))
+                .toList();
+
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: AppColors.color5,
+              content: Row(
+                children: [
+                  Icon(Icons.check, color: AppColors.color4),
+                  SizedBox(width: 10),
+                  Text(
+                    "Payment details retrieved successfully!",
+                    style: fontStyle.font3,
+                  ),
+                ],
+              ),
+              duration: Duration(seconds: 4),
+            ),
+          );
+        }
+        return convertedDetails;
+      } else {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: AppColors.color6,
+              content: Row(
+                children: [
+                  Icon(Icons.info, color: AppColors.color3),
+                  SizedBox(width: 10),
+                  Text("No payment details found for the specified year."),
+                ],
+              ),
+              duration: Duration(seconds: 4),
+            ),
+          );
+        }
+        return null;
+      }
+    } else {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: AppColors.color6,
+            content: Row(
+              children: [
+                Icon(Icons.info, color: AppColors.color3),
+                SizedBox(width: 10),
+                Text("No data found for the specified class ID."),
+              ],
+            ),
+            duration: Duration(seconds: 4),
+          ),
+        );
+      }
+      return null;
+    }
+  } on FirebaseException catch (e) {
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: AppColors.color6,
+          content: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                Icon(Icons.warning_amber, color: AppColors.color3),
+                SizedBox(width: 10),
+                Text('Error: ${e.message}'),
+              ],
+            ),
+          ),
+          duration: Duration(seconds: 5),
+        ),
+      );
+    }
+    return null;
+  }
+}
+
+Future<void> updatePayment(
+  BuildContext context,
+  String classID,
+  String year,
+  aMonth updatedMonth,
+  int index,
+) async {
+  try {
+    DocumentReference documentRef = _firestore
+        .collection('Payment')
+        .doc(classID);
+
+    // Retrieve the existing data for the specified year
+    DocumentSnapshot documentSnapshot = await documentRef.get();
+
+    if (documentSnapshot.exists) {
+      Map<String, dynamic>? data =
+          documentSnapshot.data() as Map<String, dynamic>?;
+      List<Map<String, dynamic>>? paymentDetails =
+          data?[year]?.cast<Map<String, dynamic>>();
+
+      if (paymentDetails != null &&
+          index >= 0 &&
+          index < paymentDetails.length) {
+        // Update the specific object at the given index
+        paymentDetails[index] = updatedMonth.toJson();
+
+        // Update Firestore with the modified list
+        await documentRef.update({year: paymentDetails});
+
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: AppColors.color5,
+              content: Row(
+                children: [
+                  Icon(Icons.check, color: AppColors.color4),
+                  SizedBox(width: 10),
+                  Text("Payment updated successfully!", style: fontStyle.font3),
+                ],
+              ),
+              duration: Duration(seconds: 4),
+            ),
+          );
+        }
+      } else {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: AppColors.color6,
+              content: Row(
+                children: [
+                  Icon(Icons.info, color: AppColors.color3),
+                  SizedBox(width: 10),
+                  Text(
+                    "Invalid index or no data found for the specified year.",
+                  ),
+                ],
+              ),
+              duration: Duration(seconds: 4),
+            ),
+          );
+        }
+      }
+    } else {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: AppColors.color6,
+            content: Row(
+              children: [
+                Icon(Icons.info, color: AppColors.color3),
+                SizedBox(width: 10),
+                Text("No data found for the specified class ID."),
+              ],
+            ),
+            duration: Duration(seconds: 4),
+          ),
+        );
+      }
     }
   } on FirebaseException catch (e) {
     if (context.mounted) {
