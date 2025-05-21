@@ -38,7 +38,7 @@ GestureDetector listCardOnViewStudent(
                 );
               } else {
                 print("Card clicked: $ID");
-                addStudentIntoClassController(context, object, ID);
+                addStudentIntoClassController(context, object, student);
                 print("Student added successfully to the class.");
               }
             }

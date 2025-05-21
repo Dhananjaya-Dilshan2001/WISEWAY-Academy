@@ -261,6 +261,79 @@ class aDay {
   }
 }
 
+class aPayment {
+  String year;
+  String month;
+  String classID;
+  String studentID;
+  int value;
+  Timestamp collectedDate;
+  String reason;
+  String method;
+  aPayment({
+    required this.year,
+    required this.month,
+    required this.classID,
+    required this.studentID,
+    required this.value,
+    required this.collectedDate,
+    required this.reason,
+    required this.method,
+  });
+  // Method to convert a Day object to a map
+  Map<String, dynamic> toMap() {
+    return {
+      'year': year,
+      'month': month,
+      'classID': classID,
+      'studentID': studentID,
+      'value': value,
+      'collectedDate': collectedDate,
+      'reason': reason,
+      'method': method,
+    };
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'year': year,
+      'month': month,
+      'classID': classID,
+      'studentID': studentID,
+      'value': value,
+      'collectedDate': collectedDate,
+      'reason': reason,
+      'method': method,
+    };
+  }
+
+  // Method to create a Day object from a map
+  factory aPayment.fromMap(Map<String, dynamic> map) {
+    return aPayment(
+      year: map['year'],
+      month: map['month'],
+      classID: map['classID'],
+      studentID: map['studentID'],
+      value: map['value'],
+      collectedDate: map['collectedDate'],
+      reason: map['reason'],
+      method: map['method'],
+    );
+  }
+  factory aPayment.fromJson(Map<String, dynamic> json) {
+    return aPayment(
+      year: json['year'],
+      month: json['month'],
+      classID: json['classID'],
+      studentID: json['studentID'],
+      value: json['value'],
+      collectedDate: json['collectedDate'],
+      reason: json['reason'],
+      method: json['method'],
+    );
+  }
+}
+
 class aMonth {
   String name;
   String classID;

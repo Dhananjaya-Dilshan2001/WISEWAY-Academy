@@ -83,78 +83,26 @@ Future<List<aMonth>?> getPaymentDetails(
                 .toList();
 
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: AppColors.color5,
-              content: Row(
-                children: [
-                  Icon(Icons.check, color: AppColors.color4),
-                  SizedBox(width: 10),
-                  Text(
-                    "Payment details retrieved successfully!",
-                    style: fontStyle.font3,
-                  ),
-                ],
-              ),
-              duration: Duration(seconds: 4),
-            ),
-          );
+          print("Get payment details from firebase..!");
         }
         return convertedDetails;
       } else {
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: AppColors.color6,
-              content: Row(
-                children: [
-                  Icon(Icons.info, color: AppColors.color3),
-                  SizedBox(width: 10),
-                  Text("No payment details found for the specified year."),
-                ],
-              ),
-              duration: Duration(seconds: 4),
-            ),
-          );
+          print("Error coming when get payment details from firebase..!");
         }
         return null;
       }
     } else {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: AppColors.color6,
-            content: Row(
-              children: [
-                Icon(Icons.info, color: AppColors.color3),
-                SizedBox(width: 10),
-                Text("No data found for the specified class ID."),
-              ],
-            ),
-            duration: Duration(seconds: 4),
-          ),
+        print(
+          "Error coming when get payment details from firebase..! --No data found for the specified class ID.",
         );
       }
       return null;
     }
   } on FirebaseException catch (e) {
     if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: AppColors.color6,
-          content: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                Icon(Icons.warning_amber, color: AppColors.color3),
-                SizedBox(width: 10),
-                Text('Error: ${e.message}'),
-              ],
-            ),
-          ),
-          duration: Duration(seconds: 5),
-        ),
-      );
+      print("Error come when get payment details from firebase -- $e");
     }
     return null;
   }

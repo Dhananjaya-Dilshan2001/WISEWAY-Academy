@@ -14,8 +14,9 @@ Future<void> addDayController(
   aDay day,
 ) async {
   showPending(context);
+  print("Month ${month.name} Month Index--$monthIndex");
   month.attendance.add(day);
-  await updatePayment(context, classObject.ID, "2025", month, monthIndex);
+  await updatePayment(context, classObject.ID, "2025", month, monthIndex - 1);
   //Navigator.pop(context);
 
   List<aMonth>? payment = await getPaymentController(
@@ -27,9 +28,9 @@ Future<void> addDayController(
     await buildDayList(
       context,
       0,
-      payment[0],
+      payment[DateTime.now().month - 1],
       classObject,
-      payment[0].attendance,
+      payment[DateTime.now().month - 1].attendance,
     );
   }
   Navigator.push(
@@ -38,7 +39,7 @@ Future<void> addDayController(
       builder:
           (context) => Classdashboard(
             object: classObject,
-            month: payment?[0] ?? nullMonthObject(),
+            month: payment?[DateTime.now().month - 1] ?? nullMonthObject(),
           ),
     ),
   );

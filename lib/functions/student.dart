@@ -49,3 +49,32 @@ List<aStudent> fetchStudentByIDs(
       .where((student) => studentIDs.contains(student.ID))
       .toList();
 }
+
+Future<aStudent?> fetchStudentByID(
+  BuildContext context,
+  String studentID,
+) async {
+  await getAllStudent(context);
+  for (var student in allStudent) {
+    if (student.ID == studentID) {
+      return student;
+    }
+  }
+  return null;
+}
+
+Future<aStudent?> searchStudentController(
+  BuildContext context,
+  String studentID,
+) async {
+  aStudent? student = await fetchStudentByID(context, studentID);
+  if (student != null) {
+    print("Student name ---> ${student.name}");
+    Navigator.pop(context);
+    return student;
+  } else {
+    print("Student Not Found");
+    Navigator.pop(context);
+    return null;
+  }
+}

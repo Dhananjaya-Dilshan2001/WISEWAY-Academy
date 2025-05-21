@@ -79,7 +79,7 @@ class _addDayState extends State<addDay> {
                       // Dark background for the input field
                       labelText:
                           '${widget.object.date.toDate().day.toString().padLeft(2, '0')}'
-                          '/${widget.object.date.toDate().day.toString().padLeft(2, '0')}/${widget.object.date.toDate().year.toString().padLeft(2, '0')}',
+                          '/${widget.object.date.toDate().month.toString().padLeft(2, '0')}/${widget.object.date.toDate().year.toString().padLeft(2, '0')}',
                       labelStyle: fontStyle.font4.copyWith(
                         color: Colors.white,
                       ), // White text color

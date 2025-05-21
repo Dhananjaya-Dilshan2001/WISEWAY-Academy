@@ -4,6 +4,7 @@ import 'package:apk/functions/classes.dart';
 import 'package:apk/functions/payment.dart';
 import 'package:apk/screen/UIBuilding/dayList.dart';
 import 'package:apk/screen/classDashboard.dart';
+import 'package:apk/screen/collectPayment.dart';
 import 'package:apk/screen/popUpWindows/alertMsg.dart';
 import 'package:flutter/material.dart';
 
@@ -30,9 +31,9 @@ GestureDetector listCardOnClassList(
         await buildDayList(
           context,
           0,
-          payment[0],
+          payment[DateTime.now().month - 1],
           object,
-          payment[0].attendance,
+          payment[DateTime.now().month - 1].attendance,
         );
       }
       Navigator.push(
@@ -41,10 +42,11 @@ GestureDetector listCardOnClassList(
           builder:
               (context) => Classdashboard(
                 object: object,
-                month: payment?[0] ?? nullMonthObject(),
+                month: payment?[DateTime.now().month - 1] ?? nullMonthObject(),
               ),
         ),
       );
+      print("Today month is : ${DateTime.now().month}");
     },
     child: Container(
       padding: EdgeInsets.only(top: 5, bottom: 5),
@@ -206,4 +208,73 @@ Future<void> buildClassList(BuildContext context, List<aClass> objects) async {
   //   context,
   //   MaterialPageRoute(builder: (context) => StudentList()),
   // );
+}
+
+GestureDetector classCardOnStudent(
+  BuildContext context,
+  aClass object,
+  Color bgColor,
+) {
+  return GestureDetector(
+    onTap: () async {},
+    child: Container(
+      padding: EdgeInsets.only(top: 5, bottom: 5),
+      //height: MediaQuery.of(context).size.height * 0.15,
+      width: MediaQuery.of(context).size.width * 0.8,
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(5),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(height: MediaQuery.of(context).size.width * 0.01),
+          Text(
+            "Grade ${object.grade} - ${object.curriculm} : ",
+            style: TextStyle(
+              color: AppColors.color4,
+              fontFamily: 'NotoSansSinhala',
+              fontSize: MediaQuery.of(context).size.width * 0.03,
+            ),
+          ),
+          //SizedBox(height: MediaQuery.of(context).size.width * 0.01),
+          Text(
+            "${object.subject}",
+            style: TextStyle(
+              color: AppColors.color4,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'NotoSansSinhala',
+              fontSize: MediaQuery.of(context).size.width * 0.04,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+//add items for table
+void addNewClassOnStudent(BuildContext context, aClass object, Color bgColor) {
+  classListOnStudent.add(SizedBox(height: 5));
+  classListOnStudent.add(classCardOnStudent(context, object, bgColor));
+}
+
+//build student widget list
+Future<void> buildClassListOnStudent(
+  BuildContext context,
+  List<aClass> objects,
+  int selectedCard,
+) async {
+  classListOnStudent = []; // Clear the list before adding new items
+  int l = objects.length;
+  print("Lenth of array in Build Class List Is $l");
+
+  for (int i = 0; i < l; i++) {
+    addNewClassOnStudent(
+      context,
+      objects[i],
+      i == selectedCard ? AppColors.color3 : AppColors.color3.withOpacity(0.4),
+    );
+  }
 }

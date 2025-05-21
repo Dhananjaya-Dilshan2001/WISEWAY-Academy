@@ -72,3 +72,42 @@ Future<void> getAllStudent(BuildContext context) async {
     print('Document does not exist');
   }
 }
+
+Future<void> updateStudent(
+  BuildContext context,
+  aStudent updatedStudent,
+) async {
+  try {
+    DocumentReference documentRef = _firestore
+        .collection('WISEWAY Academy')
+        .doc("students");
+
+    // Get current students array
+    DocumentSnapshot docSnapshot = await documentRef.get();
+    if (!docSnapshot.exists) {
+      throw Exception("Students document does not exist");
+    }
+
+    List<dynamic> students = List.from(docSnapshot['students'] ?? []);
+    int index = students.indexWhere(
+      (student) => student['ID'] == updatedStudent.ID,
+    );
+
+    if (index == -1) {
+      throw Exception("Student with ID ${updatedStudent.ID} not found");
+    }
+
+    // Update the student at the found index
+    students[index] = updatedStudent.toMap();
+
+    await documentRef.update({'students': students});
+
+    if (context.mounted) {
+      print("Update student successfully..!");
+    }
+  } catch (e) {
+    if (context.mounted) {
+      print("Error come when update student $e");
+    }
+  }
+}

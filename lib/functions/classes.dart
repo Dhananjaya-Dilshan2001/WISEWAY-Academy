@@ -1,6 +1,7 @@
 import 'package:apk/dataModel/model.dart';
 import 'package:apk/firebase/classFunction.dart';
 import 'package:apk/firebase/payment.dart';
+import 'package:apk/firebase/studentFunctios.dart';
 import 'package:apk/functions/payment.dart';
 import 'package:apk/screen/UIBuilding/classList.dart';
 import 'package:apk/screen/adminPanel.dart';
@@ -51,11 +52,15 @@ Future<void> addClassController(BuildContext context, aClass object) async {
 Future<void> addStudentIntoClassController(
   BuildContext context,
   aClass object,
-  String studentID,
+  aStudent student,
 ) async {
   showPending(context);
-  print("Add student into class functionality for student ID: $studentID");
-  object.students.add(studentID);
+  print("Add student into class functionality for student ID: ${student.ID}}");
+
+  student.classID.add(object.ID);
+  await updateStudent(context, student);
+
+  object.students.add(student.ID);
   await updateClass(context, object);
   Navigator.pop(context);
   print("Student added successfully to the class.");
@@ -86,4 +91,64 @@ Future<void> markAttendace(
 
 List<String> fetchStudentIDFromAttendanceList(List<String> list) {
   return list.map((str) => str.split(' ').first).toList();
+}
+
+int getMonthIntFromName(String monthName) {
+  const months = {
+    'January': 1,
+    'February': 2,
+    'March': 3,
+    'April': 4,
+    'May': 5,
+    'June': 6,
+    'July': 7,
+    'August': 8,
+    'September': 9,
+    'October': 10,
+    'November': 11,
+    'December': 12,
+  };
+  return months[monthName] ?? 0;
+}
+
+String getMonthName(int monthNumber) {
+  const months = [
+    '', // Placeholder for 0 index
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+  if (monthNumber >= 1 && monthNumber <= 12) {
+    return months[monthNumber];
+  }
+  return '';
+}
+
+int nextBackController(int currentMonth, bool isNext) {
+  if (isNext) {
+    if (1 <= currentMonth && currentMonth <= 11) {
+      return currentMonth + 1;
+    } else {
+      return currentMonth;
+    }
+  } else {
+    if (2 <= currentMonth && currentMonth <= 12) {
+      return currentMonth - 1;
+    } else {
+      return currentMonth;
+    }
+  }
+}
+
+List<aClass> fetchClassUsingID(List<aClass> allClass, List<String> classID) {
+  return allClass.where((c) => classID.contains(c.ID)).toList();
 }

@@ -6,11 +6,11 @@ import 'package:apk/firebase/studentFunctios.dart';
 import 'package:apk/functions/classes.dart';
 import 'package:apk/functions/student.dart';
 import 'package:apk/screen/UIBuilding/studentList.dart';
-import 'package:apk/screen/collectPayment.dart';
 import 'package:apk/screen/paymentReport.dart';
 import 'package:apk/screen/popUpWindows/addNewClass.dart';
 import 'package:apk/screen/popUpWindows/alertMsg.dart';
 import 'package:apk/screen/popUpWindows/registerStudent.dart';
+import 'package:apk/screen/popUpWindows/searchStudent.dart';
 import 'package:apk/screen/studentList.dart';
 import 'package:flutter/material.dart';
 
@@ -152,11 +152,11 @@ class _adminPanelState extends State<adminPanel>
                     "Collect\nPayment",
                     AppColors.color3,
                     () async {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Collectpayment(),
-                        ),
+                      await showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return searchStudent(); // Call your StatefulWidget
+                        },
                       );
                       print('tap on Collect Payment');
                       //

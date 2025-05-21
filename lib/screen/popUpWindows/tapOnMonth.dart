@@ -1,16 +1,46 @@
 import 'package:apk/commonWidget/commonButton.dart';
 import 'package:apk/commonWidget/font&color.dart';
+import 'package:apk/dataModel/model.dart';
+import 'package:apk/functions/allPayment.dart';
+import 'package:cloud_firestore_platform_interface/src/timestamp.dart';
 import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+final TextEditingController paymentValueController = TextEditingController();
+
+int getValueAsInt(TextEditingController value) {
+  int m = 0;
+  try {
+    m = int.parse(value.text);
+    return m;
+  } catch (e) {
+    // Handle the error if the text cannot be converted to an integer
+    print("Error: $e");
+    return 0;
+  }
+}
+
 class tapOnMonth extends StatefulWidget {
-  const tapOnMonth({super.key});
+  final aPayment paymentObject;
+  const tapOnMonth({super.key, required this.paymentObject});
   @override
   State<tapOnMonth> createState() => _tapOnMonthState();
 }
 
 class _tapOnMonthState extends State<tapOnMonth> {
+  Color tapOnline = AppColors.color2;
+  Color tapCash = AppColors.color6;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    tapOnline = AppColors.color2;
+    tapCash = AppColors.color6;
+    widget.paymentObject.method = "Cash";
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -21,7 +51,10 @@ class _tapOnMonthState extends State<tapOnMonth> {
         //width: MediaQuery.of(context).size.width * 0.7,
         child: Column(
           children: [
-            Text("2025 - January", style: fontStyle.font2),
+            Text(
+              "${widget.paymentObject.year} - ${widget.paymentObject.month}",
+              style: fontStyle.font2,
+            ),
             Container(
               height: 1,
               width: MediaQuery.of(context).size.width * 0.7,
@@ -46,10 +79,10 @@ class _tapOnMonthState extends State<tapOnMonth> {
                   width: MediaQuery.of(context).size.width * 0.25,
                   //color: AppColors.color6,
                   child: TextField(
-                    //keyboardType: TextInputType.number,
+                    keyboardType: TextInputType.number,
                     style: fontStyle.font4,
                     decoration: InputDecoration(),
-                    //controller: gradecontroller,
+                    controller: paymentValueController,
                   ),
                 ),
               ],
@@ -75,7 +108,10 @@ class _tapOnMonthState extends State<tapOnMonth> {
                   child: DateTimeField(
                     decoration: InputDecoration(
                       // Dark background for the input field
-                      labelText: 'year}/month}/day}',
+                      labelText:
+                          '${widget.paymentObject.collectedDate.toDate().year.toString()}/'
+                          '${widget.paymentObject.collectedDate.toDate().month.toString()}/'
+                          '${widget.paymentObject.collectedDate.toDate().day.toString()}',
                       labelStyle: fontStyle.font4.copyWith(
                         color: Colors.white,
                       ), // White text color
@@ -89,7 +125,9 @@ class _tapOnMonthState extends State<tapOnMonth> {
                     mode: DateTimeFieldPickerMode.date,
                     onChanged: (DateTime? value) {
                       setState(() {
-                        //tempPaper.date = value!;
+                        widget.paymentObject.collectedDate = Timestamp.fromDate(
+                          value!,
+                        );
                       });
                     },
                   ),
@@ -103,7 +141,7 @@ class _tapOnMonthState extends State<tapOnMonth> {
                   height: 25,
                   width: MediaQuery.of(context).size.width * 0.15,
                   //color: AppColors.color5,
-                  child: Text("Note", style: fontStyle.font4),
+                  child: Text("Reason", style: fontStyle.font4),
                 ),
                 Container(
                   height: 25,
@@ -116,13 +154,17 @@ class _tapOnMonthState extends State<tapOnMonth> {
                     child: TextField(
                       style: fontStyle.font4,
                       decoration: InputDecoration(
+                        hintText: widget.paymentObject.reason,
+                        hintStyle: fontStyle.font4.copyWith(
+                          color: Colors.white, // Set hint text color to white
+                        ),
                         contentPadding: EdgeInsets.symmetric(horizontal: 10),
                         border: OutlineInputBorder(),
                       ),
                       maxLines: null,
                       keyboardType: TextInputType.multiline,
                       onChanged: (value) {
-                        //tempStudent.name = value;
+                        widget.paymentObject.reason = value;
                       },
                     ),
                   ),
@@ -149,16 +191,9 @@ class _tapOnMonthState extends State<tapOnMonth> {
                       GestureDetector(
                         onTap: () {
                           setState(() {
-                            // tapMale =
-                            //     tapMale == AppColors.color1
-                            //         ? AppColors.color5
-                            //         : AppColors.color1;
-                            // tapFemale = AppColors.color1;
-                            // if (tapMale == AppColors.color5) {
-                            //   tempStudent.gender = "Male";
-                            // } else {
-                            //   tempStudent.gender = "Female";
-                            // }
+                            tapOnline = AppColors.color6;
+                            tapCash = AppColors.color2;
+                            widget.paymentObject.method = "Online";
                           });
                         },
                         child: Container(
@@ -168,7 +203,7 @@ class _tapOnMonthState extends State<tapOnMonth> {
                             child: Text("Online", style: fontStyle.font4),
                           ),
                           decoration: BoxDecoration(
-                            color: AppColors.color6,
+                            color: tapOnline,
                             borderRadius: BorderRadius.circular(5.0),
                           ),
                         ),
@@ -177,16 +212,9 @@ class _tapOnMonthState extends State<tapOnMonth> {
                       GestureDetector(
                         onTap: () {
                           setState(() {
-                            // tapFemale =
-                            //     tapFemale == AppColors.color1
-                            //         ? AppColors.color5
-                            //         : AppColors.color1;
-                            // tapMale = AppColors.color1;
-                            // if (tapFemale == AppColors.color5) {
-                            //   tempStudent.gender = "Female";
-                            // } else {
-                            //   tempStudent.gender = "Male";
-                            // }
+                            tapOnline = AppColors.color2;
+                            tapCash = AppColors.color6;
+                            widget.paymentObject.method = "Cash";
                           });
                         },
                         child: Container(
@@ -196,7 +224,7 @@ class _tapOnMonthState extends State<tapOnMonth> {
                             child: Text("Cash", style: fontStyle.font4),
                           ),
                           decoration: BoxDecoration(
-                            color: AppColors.color2,
+                            color: tapCash,
                             borderRadius: BorderRadius.circular(5.0),
                           ),
                         ),
@@ -224,11 +252,14 @@ class _tapOnMonthState extends State<tapOnMonth> {
                 SizedBox(width: MediaQuery.of(context).size.width * 0.08),
                 commonButton.button4(
                   MediaQuery.of(context).size.width * 0.3,
-                  "Update",
+                  "Collect",
                   AppColors.color6,
                   () async {
-                    print('Tap on Register');
-                    //cheackTempStudentNull(context);
+                    print('Tap on Collect..!');
+                    widget.paymentObject.value = getValueAsInt(
+                      paymentValueController,
+                    );
+                    addNewPaymentController(context, widget.paymentObject);
                   },
                   AppColors.color4,
                 ),

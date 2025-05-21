@@ -1,11 +1,14 @@
-import 'package:apk/commonWidget/commonButton.dart';
 import 'package:apk/commonWidget/font&color.dart';
+import 'package:apk/dataModel/model.dart';
+import 'package:apk/screen/UIBuilding/monthList.dart';
 import 'package:apk/screen/adminPanel.dart';
-import 'package:apk/screen/popUpWindows/tapOnMonth.dart';
 import 'package:flutter/material.dart';
 
+List<Widget> classListOnStudent = [];
+
 class Collectpayment extends StatefulWidget {
-  const Collectpayment({super.key});
+  final aStudent student;
+  Collectpayment({super.key, required this.student});
   @override
   State<Collectpayment> createState() => _CollectpaymentState();
 }
@@ -45,96 +48,7 @@ class _CollectpaymentState extends State<Collectpayment> {
           SizedBox(height: MediaQuery.of(context).size.height * 0.01),
           Center(
             child: Container(
-              height: MediaQuery.of(context).size.height * 0.05,
-              width: MediaQuery.of(context).size.width * 0.9,
-              //color: AppColors.color1,
-              child: Row(
-                children: [
-                  SizedBox(width: MediaQuery.of(context).size.width * 0.01),
-                  Container(
-                    height: MediaQuery.of(context).size.height * 0.03,
-                    width: MediaQuery.of(context).size.width * 0.3,
-                    child: TextField(
-                      onChanged: (value) {
-                        //searchStudentID = value;
-                      },
-                      decoration: InputDecoration(
-                        hintText: 'Student ID', // Hint text
-                        hintStyle: TextStyle(
-                          color: AppColors.color4,
-                          fontSize: 10, // Hint text color
-                        ), // Background color of TextField
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(
-                            5.0,
-                          ), // Curved border
-                          borderSide: BorderSide(
-                            color: Colors.white, // White border color
-                            width: 1.0, // Border thickness
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(
-                            5.0,
-                          ), // Curved border
-                          borderSide: BorderSide(
-                            color:
-                                Colors.white, // White border color when focused
-                            width: 2.0, // Border thickness
-                          ),
-                        ),
-                      ),
-                      style: TextStyle(
-                        color: AppColors.color4, // Text color
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: MediaQuery.of(context).size.width * 0.01),
-                  GestureDetector(
-                    onTap: () async {
-                      print("Click Search Button --ID ---> searchStudentID");
-                      //showPending(context);
-                      //await searchStudent(context, searchStudentID);
-                      // await showDialog(
-                      // context: context,
-                      // builder: (BuildContext context) {
-                      //   return searchedStudent(); // Call your StatefulWidget
-                      // },
-                      // );
-                    },
-                    child: Container(
-                      height: MediaQuery.of(context).size.height * 0.03,
-                      width: MediaQuery.of(context).size.width * 0.12,
-                      child: Image.asset("Image/search.png"),
-                      decoration: BoxDecoration(
-                        color: AppColors.color6,
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: MediaQuery.of(context).size.width * 0.01),
-                  GestureDetector(
-                    onTap: () async {
-                      //viewAllStudentController(context);
-                    },
-                    child: Container(
-                      height: MediaQuery.of(context).size.height * 0.03,
-                      width: MediaQuery.of(context).size.width * 0.12,
-                      child: Icon(Icons.qr_code_scanner, color: Colors.white),
-                      decoration: BoxDecoration(
-                        color: AppColors.color6,
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-          Center(
-            child: Container(
-              height: MediaQuery.of(context).size.height * 0.8,
+              height: MediaQuery.of(context).size.height * 0.9,
               width: MediaQuery.of(context).size.width * 0.9,
               //color: AppColors.color1,
               decoration: BoxDecoration(
@@ -189,14 +103,16 @@ class _CollectpaymentState extends State<Collectpayment> {
                             bottom: 0.0, // Bottom padding
                           ),
                           child: Text(
-                            "Thinuka Sasvindu \nKICA25003"
-                            "\nGrade 10 - Edexcel ",
+                            "${widget.student.name}\n${widget.student.ID}"
+                            "\nGrade ${widget.student.grade} - ${widget.student.curriculm} ",
                             style: fontStyle.font3,
                           ),
                         ),
                       ),
                     ],
                   ),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+                  Column(children: classListOnStudent),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.01),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -236,200 +152,8 @@ class _CollectpaymentState extends State<Collectpayment> {
                     ],
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        alignment: Alignment.centerRight,
-                        height: MediaQuery.of(context).size.height * 0.04,
-                        width: MediaQuery.of(context).size.width * 0.25,
-                        child: Text("January :", style: fontStyle.font3),
-                      ),
-                      SizedBox(width: MediaQuery.of(context).size.width * 0.01),
-                      GestureDetector(
-                        onTap: () async {
-                          await showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return tapOnMonth(); // Call your StatefulWidget
-                            },
-                          );
-                        },
-                        child: Container(
-                          alignment: Alignment.center,
-                          height: MediaQuery.of(context).size.height * 0.04,
-                          width: MediaQuery.of(context).size.width * 0.55,
-                          child: Row(
-                            children: [
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.01,
-                              ),
-                              Icon(
-                                Icons.check_circle,
-                                color: Colors.white,
-                                size: MediaQuery.of(context).size.height * 0.03,
-                              ),
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.01,
-                              ),
-                              Text(
-                                "Paid - 3000 - Online",
-                                style: TextStyle(
-                                  fontSize:
-                                      MediaQuery.of(context).size.height *
-                                      0.018,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColors.color6,
-                            borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(5.0),
-                              bottomRight: Radius.circular(5.0),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        alignment: Alignment.centerRight,
-                        height: MediaQuery.of(context).size.height * 0.04,
-                        width: MediaQuery.of(context).size.width * 0.25,
-                        child: Text("February:", style: fontStyle.font3),
-                      ),
-                      SizedBox(width: MediaQuery.of(context).size.width * 0.01),
-                      GestureDetector(
-                        onTap: () {
-                          //tap on month button;
-                        },
-                        child: Container(
-                          alignment: Alignment.center,
-                          height: MediaQuery.of(context).size.height * 0.04,
-                          width: MediaQuery.of(context).size.width * 0.55,
-                          child: Row(
-                            children: [
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.01,
-                              ),
-                              Icon(
-                                Icons.check_circle,
-                                color: Colors.white,
-                                size: MediaQuery.of(context).size.height * 0.03,
-                              ),
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.01,
-                              ),
-                              Text(
-                                "Paid - 3000  Cash",
-                                style: TextStyle(
-                                  fontSize:
-                                      MediaQuery.of(context).size.height *
-                                      0.018,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColors.color6,
-                            borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(5.0),
-                              bottomRight: Radius.circular(5.0),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        alignment: Alignment.centerRight,
-                        height: MediaQuery.of(context).size.height * 0.04,
-                        width: MediaQuery.of(context).size.width * 0.25,
-                        child: Text("March :", style: fontStyle.font3),
-                      ),
-                      SizedBox(width: MediaQuery.of(context).size.width * 0.01),
-                      GestureDetector(
-                        onTap: () {
-                          //tap on month button;
-                        },
-                        child: Container(
-                          alignment: Alignment.center,
-                          height: MediaQuery.of(context).size.height * 0.04,
-                          width: MediaQuery.of(context).size.width * 0.55,
-                          child: Row(
-                            children: [
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.01,
-                              ),
-                              Icon(
-                                Icons.close,
-                                color: Colors.white,
-                                size: MediaQuery.of(context).size.height * 0.03,
-                              ),
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.01,
-                              ),
-                              Text(
-                                "Unpaid",
-                                style: TextStyle(
-                                  fontSize:
-                                      MediaQuery.of(context).size.height *
-                                      0.018,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColors.color6,
-                            borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(5.0),
-                              bottomRight: Radius.circular(5.0),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.35),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      commonButton.button4(
-                        MediaQuery.of(context).size.width * 0.3,
-                        "Back",
-                        AppColors.color3,
-                        () async {
-                          print('Tap on Back');
-                          //tempStudent.setAllNull();
-                          Navigator.of(context).pop();
-                        },
-                        AppColors.color4,
-                      ),
-                      SizedBox(width: MediaQuery.of(context).size.width * 0.1),
-                      commonButton.button4(
-                        MediaQuery.of(context).size.width * 0.3,
-                        "Update",
-                        AppColors.color6,
-                        () async {
-                          print('Tap on Update');
-                          //cheackTempStudentNull(context);
-                        },
-                        AppColors.color4,
-                      ),
-                    ],
-                  ),
+
+                  Column(children: monthCard),
                 ],
               ),
             ),

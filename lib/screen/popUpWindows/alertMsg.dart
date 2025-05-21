@@ -49,3 +49,19 @@ void popUpMsg(
     },
   );
 }
+
+void snackBarMsg(BuildContext context, Color bgcolor, String msg) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      backgroundColor: bgcolor,
+      content: Row(
+        children: [
+          Icon(Icons.check, color: AppColors.color4),
+          SizedBox(width: 10),
+          Text("$msg", style: fontStyle.font3),
+        ],
+      ),
+      duration: Duration(seconds: 4),
+    ),
+  );
+}

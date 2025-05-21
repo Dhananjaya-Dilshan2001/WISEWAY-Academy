@@ -1,11 +1,14 @@
 import 'package:apk/commonWidget/font&color.dart';
 import 'package:apk/dataModel/model.dart';
 import 'package:apk/firebase/studentFunctios.dart';
+import 'package:apk/functions/classes.dart';
 import 'package:apk/functions/payment.dart';
 import 'package:apk/functions/student.dart';
+import 'package:apk/screen/UIBuilding/dayList.dart';
 import 'package:apk/screen/UIBuilding/viewAllStudent.dart';
 import 'package:apk/screen/adminPanel.dart';
 import 'package:apk/screen/popUpWindows/addDay.dart';
+import 'package:apk/screen/popUpWindows/alertMsg.dart';
 import 'package:apk/screen/popUpWindows/allStudent.dart';
 import 'package:flutter/material.dart';
 
@@ -268,7 +271,49 @@ class _ClassdashboardState extends State<Classdashboard> {
                       SizedBox(width: MediaQuery.of(context).size.width * 0.01),
                       GestureDetector(
                         onTap: () async {
-                          //viewAllStudentController(context);
+                          showPending(context);
+                          List<aMonth>? payment = await getPaymentController(
+                            context,
+                            "2025",
+                            widget.object.ID,
+                          );
+                          if (payment != null && payment.isNotEmpty) {
+                            await buildDayList(
+                              context,
+                              0,
+                              payment[nextBackController(
+                                    getMonthIntFromName(widget.month.name),
+                                    false,
+                                  ) -
+                                  1],
+                              widget.object,
+                              payment[nextBackController(
+                                        getMonthIntFromName(widget.month.name),
+                                        false,
+                                      ) -
+                                      1]
+                                  .attendance,
+                            );
+                          }
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) => Classdashboard(
+                                    object: widget.object,
+                                    month:
+                                        payment?[nextBackController(
+                                              getMonthIntFromName(
+                                                widget.month.name,
+                                              ),
+                                              false,
+                                            ) -
+                                            1] ??
+                                        nullMonthObject(),
+                                  ),
+                            ),
+                          );
                         },
                         child: Container(
                           height: MediaQuery.of(context).size.width * 0.1,
@@ -285,7 +330,49 @@ class _ClassdashboardState extends State<Classdashboard> {
                       SizedBox(width: MediaQuery.of(context).size.width * 0.03),
                       GestureDetector(
                         onTap: () async {
-                          //viewAllStudentController(context);
+                          showPending(context);
+                          List<aMonth>? payment = await getPaymentController(
+                            context,
+                            "2025",
+                            widget.object.ID,
+                          );
+                          if (payment != null && payment.isNotEmpty) {
+                            await buildDayList(
+                              context,
+                              0,
+                              payment[nextBackController(
+                                    getMonthIntFromName(widget.month.name),
+                                    true,
+                                  ) -
+                                  1],
+                              widget.object,
+                              payment[nextBackController(
+                                        getMonthIntFromName(widget.month.name),
+                                        true,
+                                      ) -
+                                      1]
+                                  .attendance,
+                            );
+                          }
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) => Classdashboard(
+                                    object: widget.object,
+                                    month:
+                                        payment?[nextBackController(
+                                              getMonthIntFromName(
+                                                widget.month.name,
+                                              ),
+                                              true,
+                                            ) -
+                                            1] ??
+                                        nullMonthObject(),
+                                  ),
+                            ),
+                          );
                         },
                         child: Container(
                           height: MediaQuery.of(context).size.width * 0.1,
@@ -320,7 +407,7 @@ class _ClassdashboardState extends State<Classdashboard> {
                 context: context,
                 builder: (BuildContext context) {
                   return addDay(
-                    monthIndex: 0,
+                    monthIndex: getMonthIntFromName(widget.month.name),
                     monthObject: widget.month,
 
                     classObject: widget.object,
