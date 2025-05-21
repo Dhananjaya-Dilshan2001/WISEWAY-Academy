@@ -11,6 +11,7 @@ import 'package:apk/screen/popUpWindows/addNewClass.dart';
 import 'package:apk/screen/popUpWindows/alertMsg.dart';
 import 'package:apk/screen/popUpWindows/registerStudent.dart';
 import 'package:apk/screen/popUpWindows/searchStudent.dart';
+import 'package:apk/screen/popUpWindows/viewDailyReport.dart';
 import 'package:apk/screen/studentList.dart';
 import 'package:flutter/material.dart';
 
@@ -116,13 +117,18 @@ class _adminPanelState extends State<adminPanel>
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.01),
             Container(
+              padding: EdgeInsets.only(
+                top: MediaQuery.of(context).size.height * 0.015,
+                bottom: MediaQuery.of(context).size.height * 0.015,
+              ),
               height: MediaQuery.of(context).size.height * 0.15,
               width: MediaQuery.of(context).size.width * 0.9,
               decoration: BoxDecoration(
                 color: AppColors.color4,
                 borderRadius: BorderRadius.circular(5),
               ),
-              child: Row(
+              child: ListView(
+                scrollDirection: Axis.horizontal,
                 children: [
                   SizedBox(width: MediaQuery.of(context).size.width * 0.04),
                   commonButton.button3(
@@ -164,6 +170,26 @@ class _adminPanelState extends State<adminPanel>
                     },
                     AppColors.color4,
                     Icons.payments,
+                  ),
+                  SizedBox(width: MediaQuery.of(context).size.width * 0.0325),
+                  commonButton.button3(
+                    MediaQuery.of(context).size.height * 0.12,
+                    MediaQuery.of(context).size.width * 0.25,
+                    "View Daily\n  Budget",
+                    AppColors.color3,
+                    () async {
+                      await showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return viewDailyReport(); // Call your StatefulWidget
+                        },
+                      );
+                      print('tap on Collect Payment');
+                      //
+                      // Perform any action here
+                    },
+                    AppColors.color4,
+                    Icons.pages,
                   ),
                   SizedBox(width: MediaQuery.of(context).size.width * 0.0325),
                   commonButton.button3(

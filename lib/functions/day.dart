@@ -1,6 +1,6 @@
 import 'package:apk/dataModel/model.dart';
 import 'package:apk/firebase/payment.dart';
-import 'package:apk/functions/payment.dart';
+import 'package:apk/functions/paymentInFunction.dart';
 import 'package:apk/screen/UIBuilding/dayList.dart';
 import 'package:apk/screen/classDashboard.dart';
 import 'package:apk/screen/popUpWindows/alertMsg.dart';

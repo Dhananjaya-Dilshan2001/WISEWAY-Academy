@@ -2,7 +2,7 @@ import 'package:apk/commonWidget/font&color.dart';
 import 'package:apk/dataModel/model.dart';
 import 'package:apk/firebase/studentFunctios.dart';
 import 'package:apk/functions/classes.dart';
-import 'package:apk/functions/payment.dart';
+import 'package:apk/functions/paymentInFunction.dart';
 import 'package:apk/functions/student.dart';
 import 'package:apk/screen/UIBuilding/viewAllStudent.dart';
 import 'package:apk/screen/popUpWindows/allStudent.dart';

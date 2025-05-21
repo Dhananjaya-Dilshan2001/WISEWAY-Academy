@@ -1,6 +1,6 @@
 import 'package:apk/commonWidget/font&color.dart';
 import 'package:apk/dataModel/model.dart';
-import 'package:apk/functions/payment.dart';
+import 'package:apk/functions/paymentInFunction.dart';
 import 'package:flutter/material.dart';
 
 List<Widget> monthCard = [];
@@ -54,7 +54,13 @@ Row paidCard(BuildContext context, String monthName, String state) {
   );
 }
 
-Row unPaidCard(BuildContext context, String monthName) {
+Row unPaidCard(
+  BuildContext context,
+  aMonth month,
+  String classID,
+  String studentID,
+  int indexOfClass,
+) {
   //print("Student Name Is ${name[0]} ${name[1]}");
   return Row(
     mainAxisAlignment: MainAxisAlignment.center,
@@ -63,12 +69,19 @@ Row unPaidCard(BuildContext context, String monthName) {
         alignment: Alignment.centerRight,
         height: MediaQuery.of(context).size.height * 0.04,
         width: MediaQuery.of(context).size.width * 0.25,
-        child: Text("$monthName :", style: fontStyle.font3),
+        child: Text("${month.name} :", style: fontStyle.font3),
       ),
       SizedBox(width: MediaQuery.of(context).size.width * 0.01),
       GestureDetector(
         onTap: () async {
-          await waitForCollectPayment(context, "2025", monthName);
+          await waitForCollectPayment(
+            context,
+            "2025",
+            month,
+            classID,
+            studentID,
+            indexOfClass,
+          );
         },
         child: Container(
           alignment: Alignment.center,
@@ -108,7 +121,9 @@ Row unPaidCard(BuildContext context, String monthName) {
 Future<void> buildMonthList(
   BuildContext context,
   List<aMonth> allMonth,
+  String classID,
   String studentID,
+  int indexOfClass,
 ) async {
   monthCard = [];
 
@@ -135,7 +150,9 @@ Future<void> buildMonthList(
       monthCard.add(paidCard(context, allMonth[i].name, state));
     } else {
       monthCard.add(SizedBox(height: 5));
-      monthCard.add(unPaidCard(context, allMonth[i].name));
+      monthCard.add(
+        unPaidCard(context, allMonth[i], classID, studentID, indexOfClass),
+      );
     }
   }
 }

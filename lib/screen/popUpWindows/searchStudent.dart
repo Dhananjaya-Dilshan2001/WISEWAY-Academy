@@ -1,5 +1,5 @@
 import 'package:apk/commonWidget/font&color.dart';
-import 'package:apk/functions/payment.dart';
+import 'package:apk/functions/paymentInFunction.dart';
 import 'package:flutter/material.dart';
 
 String searchStudentID = "";

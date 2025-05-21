@@ -2,7 +2,7 @@ import 'package:apk/dataModel/model.dart';
 import 'package:apk/firebase/classFunction.dart';
 import 'package:apk/firebase/payment.dart';
 import 'package:apk/firebase/studentFunctios.dart';
-import 'package:apk/functions/payment.dart';
+import 'package:apk/functions/paymentInFunction.dart';
 import 'package:apk/screen/UIBuilding/classList.dart';
 import 'package:apk/screen/adminPanel.dart';
 import 'package:apk/screen/popUpWindows/alertMsg.dart';

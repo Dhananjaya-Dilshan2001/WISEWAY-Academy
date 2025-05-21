@@ -1,3 +1,4 @@
+import 'package:apk/commonWidget/font&color.dart';
 import 'package:apk/dataModel/model.dart';
 import 'package:apk/firebase/payment.dart';
 import 'package:apk/functions/classes.dart';
@@ -68,42 +69,62 @@ Future<List<aMonth>?> getPaymentController(
 Future<void> waitForCollectPaymentPage(
   BuildContext context,
   String studentID,
-  int indexOflass,
+  int indexOfClass,
 ) async {
   showPending(context);
   aStudent student = (await searchStudentController(context, studentID))!;
 
-  buildClassListOnStudent(
-    context,
-    fetchClassUsingID(allClass, student.classID),
-    0,
-  );
+  if (student.classID.isNotEmpty) {
+    buildClassListOnStudent(
+      context,
+      fetchClassUsingID(allClass, student.classID),
+      indexOfClass,
+      studentID,
+    );
 
-  List<aMonth>? payment = await getPaymentController(
-    context,
-    "2025",
-    student.classID[indexOflass],
-  );
-  if (payment != null && payment.isNotEmpty) {
-    await buildMonthList(context, payment, studentID);
+    List<aMonth>? payment = await getPaymentController(
+      context,
+      "2025",
+      student.classID[indexOfClass],
+    );
+    if (payment != null && payment.isNotEmpty) {
+      await buildMonthList(
+        context,
+        payment,
+        student.classID[indexOfClass],
+        studentID,
+        indexOfClass,
+      );
+    }
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Collectpayment(student: student)),
+    );
+  } else {
+    Navigator.pop(context);
+    snackBarMsg(
+      context,
+      AppColors.color6,
+      "Student not registered any Class..!",
+      Icons.warning_rounded,
+    );
   }
-
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => Collectpayment(student: student)),
-  );
 }
 
 Future<void> waitForCollectPayment(
   BuildContext context,
   String year,
-  String month,
+  aMonth month,
+  String classID,
+  String studentID,
+  int indexOfClass,
 ) async {
   aPayment paymentObject = aPayment(
     year: year,
-    month: month,
-    classID: "",
-    studentID: "",
+    month: month.name,
+    classID: classID,
+    studentID: studentID,
     value: 0,
     collectedDate: Timestamp.now(),
     reason: "Class Fee",
@@ -115,6 +136,8 @@ Future<void> waitForCollectPayment(
     builder: (BuildContext context) {
       return tapOnMonth(
         paymentObject: paymentObject,
+        month: month,
+        indexOfClass: indexOfClass,
       ); // Call your StatefulWidget
     },
   );

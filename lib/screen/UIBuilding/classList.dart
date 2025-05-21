@@ -1,7 +1,7 @@
 import 'package:apk/commonWidget/font&color.dart';
 import 'package:apk/dataModel/model.dart';
 import 'package:apk/functions/classes.dart';
-import 'package:apk/functions/payment.dart';
+import 'package:apk/functions/paymentInFunction.dart';
 import 'package:apk/screen/UIBuilding/dayList.dart';
 import 'package:apk/screen/classDashboard.dart';
 import 'package:apk/screen/collectPayment.dart';
@@ -214,9 +214,13 @@ GestureDetector classCardOnStudent(
   BuildContext context,
   aClass object,
   Color bgColor,
+  String studentID,
+  int index,
 ) {
   return GestureDetector(
-    onTap: () async {},
+    onTap: () async {
+      await waitForCollectPaymentPage(context, studentID, index);
+    },
     child: Container(
       padding: EdgeInsets.only(top: 5, bottom: 5),
       //height: MediaQuery.of(context).size.height * 0.15,
@@ -255,9 +259,17 @@ GestureDetector classCardOnStudent(
 }
 
 //add items for table
-void addNewClassOnStudent(BuildContext context, aClass object, Color bgColor) {
+void addNewClassOnStudent(
+  BuildContext context,
+  aClass object,
+  Color bgColor,
+  String studentID,
+  int index,
+) {
   classListOnStudent.add(SizedBox(height: 5));
-  classListOnStudent.add(classCardOnStudent(context, object, bgColor));
+  classListOnStudent.add(
+    classCardOnStudent(context, object, bgColor, studentID, index),
+  );
 }
 
 //build student widget list
@@ -265,6 +277,7 @@ Future<void> buildClassListOnStudent(
   BuildContext context,
   List<aClass> objects,
   int selectedCard,
+  String studentID,
 ) async {
   classListOnStudent = []; // Clear the list before adding new items
   int l = objects.length;
@@ -275,6 +288,8 @@ Future<void> buildClassListOnStudent(
       context,
       objects[i],
       i == selectedCard ? AppColors.color3 : AppColors.color3.withOpacity(0.4),
+      studentID,
+      i,
     );
   }
 }

@@ -1,7 +1,7 @@
 import 'package:apk/commonWidget/commonButton.dart';
 import 'package:apk/commonWidget/font&color.dart';
 import 'package:apk/dataModel/model.dart';
-import 'package:apk/functions/allPayment.dart';
+import 'package:apk/functions/allPaymentInFunction.dart';
 import 'package:cloud_firestore_platform_interface/src/timestamp.dart';
 import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +23,14 @@ int getValueAsInt(TextEditingController value) {
 
 class tapOnMonth extends StatefulWidget {
   final aPayment paymentObject;
-  const tapOnMonth({super.key, required this.paymentObject});
+  final aMonth month;
+  final int indexOfClass;
+  const tapOnMonth({
+    super.key,
+    required this.paymentObject,
+    required this.month,
+    required this.indexOfClass,
+  });
   @override
   State<tapOnMonth> createState() => _tapOnMonthState();
 }
@@ -259,7 +266,12 @@ class _tapOnMonthState extends State<tapOnMonth> {
                     widget.paymentObject.value = getValueAsInt(
                       paymentValueController,
                     );
-                    addNewPaymentController(context, widget.paymentObject);
+                    addNewPaymentController(
+                      context,
+                      widget.paymentObject,
+                      widget.month,
+                      widget.indexOfClass,
+                    );
                   },
                   AppColors.color4,
                 ),
