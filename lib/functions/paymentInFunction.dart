@@ -57,7 +57,7 @@ Future<List<aMonth>?> getPaymentController(
     classID,
   );
   if (paymentDetails != null) {
-    print("Retrieved payment details: yessssssssssssssssssssssss");
+    print("Retrieved payment details");
     print("Test : ${paymentDetails[0].classID}");
     return paymentDetails;
   } else {
@@ -72,6 +72,7 @@ Future<void> waitForCollectPaymentPage(
   int indexOfClass,
 ) async {
   showPending(context);
+  snackBarMsg(context, AppColors.color5, "$studentID", Icons.check);
   aStudent student = (await searchStudentController(context, studentID))!;
 
   if (student.classID.isNotEmpty) {
@@ -141,4 +142,21 @@ Future<void> waitForCollectPayment(
       ); // Call your StatefulWidget
     },
   );
+}
+
+List<aPayment> fetchPaymentDetails(
+  String classID,
+  String studentID,
+  List<aPayment> payments,
+) {
+  return payments
+      .where(
+        (payment) =>
+            payment.classID == classID && payment.studentID == studentID,
+      )
+      .toList();
+}
+
+List<aPayment> fetchClassAllPayment(String classID, List<aPayment> payments) {
+  return payments.where((payment) => payment.classID == classID).toList();
 }
