@@ -460,3 +460,18 @@ aStudent nullStudentObject() {
     otherInfo: "",
   );
 }
+
+aPayment nullPaymentObject() {
+  return aPayment(
+    year: "",
+    month: "",
+    classID: "",
+    studentID: "",
+    value: 0,
+    collectedDate: Timestamp.now(),
+    reason: "",
+    method: "",
+  );
+}
+
+String commonYear = DateTime.now().year.toString();

@@ -111,3 +111,42 @@ Future<void> updateStudent(
     }
   }
 }
+
+Future<void> deleteStudent(
+  BuildContext context,
+  aStudent studentToDelete,
+) async {
+  try {
+    DocumentReference documentRef = _firestore
+        .collection('WISEWAY Academy')
+        .doc("students");
+
+    // Get current students array
+    DocumentSnapshot docSnapshot = await documentRef.get();
+    if (!docSnapshot.exists) {
+      throw Exception("Students document does not exist");
+    }
+
+    List<dynamic> students = List.from(docSnapshot['students'] ?? []);
+    students.removeWhere((student) => student['ID'] == studentToDelete.ID);
+
+    await documentRef.update({'students': students});
+    print("Delete student successfully..!");
+  } catch (e) {
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: AppColors.color6,
+          content: Row(
+            children: [
+              Icon(Icons.warning_amber, color: AppColors.color3),
+              SizedBox(width: 10),
+              Text('Error: $e'),
+            ],
+          ),
+          duration: Duration(seconds: 5),
+        ),
+      );
+    }
+  }
+}

@@ -11,6 +11,7 @@ Future<void> addNewPaymentController(
   aPayment payment,
   aMonth month,
   int indexOfClass,
+  String year,
 ) async {
   showPending(context);
   String docID =
@@ -26,15 +27,14 @@ Future<void> addNewPaymentController(
     "${payment.studentID} Paid ${payment.value}=>${payment.method}",
   );
   print("Class Id is --> ${payment.classID}");
-  await updatePayment(
-    context,
-    payment.classID,
-    "2025",
-    month,
-    getMonthIntFromName(month.name) - 1,
-  );
+  await updatePayment(context, payment.classID, year, month);
   Navigator.pop(context);
-  await waitForCollectPaymentPage(context, payment.studentID, indexOfClass);
+  await waitForCollectPaymentPage(
+    context,
+    payment.studentID,
+    indexOfClass,
+    year,
+  );
 }
 
 String fetchStudenDetailsByID(
@@ -83,4 +83,31 @@ String fetchClassDetailsByID(
     default:
       return '';
   }
+}
+
+List<aPayment> fetchClassAllPayment(
+  String classID,
+  List<aPayment> payments,
+  String year,
+) {
+  return payments
+      .where((payment) => payment.classID == classID && payment.year == year)
+      .toList();
+}
+
+int getMonthlyPaymentAClass(
+  String classID,
+  List<aPayment> payments,
+  String year,
+) {
+  List<aPayment> classAllPayment = fetchClassAllPayment(
+    classID,
+    payments,
+    year,
+  );
+  int totalPayment = classAllPayment.fold(
+    0,
+    (sum, payment) => sum + payment.value,
+  );
+  return totalPayment;
 }

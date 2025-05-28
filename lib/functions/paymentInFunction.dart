@@ -1,5 +1,6 @@
 import 'package:apk/commonWidget/font&color.dart';
 import 'package:apk/dataModel/model.dart';
+import 'package:apk/firebase/classFunction.dart';
 import 'package:apk/firebase/payment.dart';
 import 'package:apk/functions/classes.dart';
 import 'package:apk/functions/student.dart';
@@ -13,7 +14,11 @@ import 'package:flutter/material.dart';
 
 List<Widget> dayList = [];
 
-void initilizePaymentForAllMonth(BuildContext context, String classID) async {
+void initilizePaymentForAllMonth(
+  BuildContext context,
+  String classID,
+  String yearName,
+) async {
   print("Payment initialized for all months for class ID: $classID.");
 
   List<Map<String, dynamic>> year = List.generate(12, (index) {
@@ -37,43 +42,59 @@ void initilizePaymentForAllMonth(BuildContext context, String classID) async {
   });
   print("Year length is ${year.length}");
 
-  await InitilizeFireBaseClassPayment(
-    context,
-    "${DateTime.now().year}",
-    classID,
-    year,
-  );
+  await InitilizeFireBaseClassPayment(context, "$yearName", classID, year);
 }
 
-Future<List<aMonth>?> getPaymentController(
+Future<aMonth> getPaymentController(
   BuildContext context,
   String year,
-  String classID,
+  int indexOfMonth,
+  aClass classObject,
 ) async {
-  print("Payment controller called for year: $year and class ID: $classID.");
-  List<aMonth>? paymentDetails = await getPaymentDetails(
+  print(
+    "Payment controller called for year: $year and class ID: ${classObject.ID}.",
+  );
+  aMonth monthDetails = await getAMonthDetails(
     context,
     year,
-    classID,
+    classObject.ID,
+    indexOfMonth,
   );
-  if (paymentDetails != null) {
-    print("Retrieved payment details");
-    print("Test : ${paymentDetails[0].classID}");
-    return paymentDetails;
-  } else {
-    print("No payment details found.");
-    return null;
-  }
+  return monthDetails;
 }
 
 Future<void> waitForCollectPaymentPage(
   BuildContext context,
   String studentID,
   int indexOfClass,
+  String year,
 ) async {
   showPending(context);
-  snackBarMsg(context, AppColors.color5, "$studentID", Icons.check);
-  aStudent student = (await searchStudentController(context, studentID))!;
+  print("came to the method Student Id is --> $studentID");
+  aStudent? student = (await searchStudentController(context, studentID));
+  print(
+    "Student Class ID Length --> ${student?.classID.length} Index of Month $indexOfClass",
+  );
+  if (student?.classID.length == 0) {
+    Navigator.pop(context);
+    snackBarMsg(
+      context,
+      AppColors.color6,
+      "Student not registered any Class..!",
+      Icons.warning_rounded,
+    );
+  }
+  if (student == null) {
+    Navigator.pop(context);
+    Navigator.pop(context);
+    snackBarMsg(
+      context,
+      AppColors.color6,
+      "Student Not Found, Invalid Student ID..!",
+      Icons.warning_rounded,
+    );
+    return;
+  }
 
   if (student.classID.isNotEmpty) {
     buildClassListOnStudent(
@@ -83,32 +104,30 @@ Future<void> waitForCollectPaymentPage(
       studentID,
     );
 
-    List<aMonth>? payment = await getPaymentController(
+    List<aMonth> payment = await getAllMonthDetails(
       context,
-      "2025",
+      year,
       student.classID[indexOfClass],
     );
-    if (payment != null && payment.isNotEmpty) {
-      await buildMonthList(
-        context,
-        payment,
-        student.classID[indexOfClass],
-        studentID,
-        indexOfClass,
-      );
-    }
 
+    await buildMonthList(
+      context,
+      payment,
+      student.classID[indexOfClass],
+      studentID,
+      indexOfClass,
+      year,
+    );
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => Collectpayment(student: student)),
-    );
-  } else {
-    Navigator.pop(context);
-    snackBarMsg(
-      context,
-      AppColors.color6,
-      "Student not registered any Class..!",
-      Icons.warning_rounded,
+      MaterialPageRoute(
+        builder:
+            (context) => Collectpayment(
+              student: student,
+              year: year,
+              indexOfClass: indexOfClass,
+            ),
+      ),
     );
   }
 }
@@ -136,6 +155,7 @@ Future<void> waitForCollectPayment(
     context: context,
     builder: (BuildContext context) {
       return tapOnMonth(
+        year: year,
         paymentObject: paymentObject,
         month: month,
         indexOfClass: indexOfClass,
@@ -157,6 +177,19 @@ List<aPayment> fetchPaymentDetails(
       .toList();
 }
 
-List<aPayment> fetchClassAllPayment(String classID, List<aPayment> payments) {
-  return payments.where((payment) => payment.classID == classID).toList();
+Future<void> setFirebaseForNextYear(BuildContext context) async {
+  await getAllClass(context); // Await if it's async
+  String year = "${DateTime.now().year + 1}";
+  print("Initializing payment for next year: $year");
+
+  await Future.forEach(allClass, (classObj) async {
+    initilizePaymentForAllMonth(context, classObj.ID, year);
+  });
+
+  snackBarMsg(
+    context,
+    AppColors.color5,
+    "Payment initialized for next year.",
+    Icons.info,
+  );
 }

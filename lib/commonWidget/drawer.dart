@@ -49,9 +49,10 @@ Drawer buildDrawer(BuildContext context) {
           ),
           title: Text('Exit', style: fontStyle.font3),
           onTap: () {
-            Navigator.push(
+            Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (context) => welcomePage()),
+              (Route<dynamic> route) => false,
             );
           },
         ),

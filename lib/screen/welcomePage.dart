@@ -1,6 +1,7 @@
 import 'package:apk/commonWidget/commonButton.dart';
 import 'package:apk/commonWidget/font&color.dart';
 import 'package:apk/firebase/classFunction.dart';
+import 'package:apk/firebase/appInfo.dart';
 import 'package:apk/functions/classes.dart';
 import 'package:apk/screen/UIBuilding/classList.dart';
 import 'package:apk/screen/adminPanel.dart';
@@ -83,12 +84,24 @@ class _welcomePageState extends State<welcomePage> {
                 print('Tap on Logging');
                 showPending(context);
                 await getAllClass(context);
-                await buildClassList(context, allClass);
-                Navigator.push(
+                await buildClassList(
                   context,
-                  MaterialPageRoute(builder: (context) => adminPanel()),
+                  allClass,
+                  DateTime.now().year.toString(),
                 );
-                // }
+                bool isValid = await cheackAdminPassword(
+                  context,
+                  adminPassword,
+                );
+                bool appVersionCheck = await cheackAppVersion(context);
+                bool ownerAccess = await checkOwnerAccess(context);
+                if (isValid && appVersionCheck && ownerAccess) {
+                  adminPassword = "";
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => adminPanel()),
+                  );
+                }
               },
               AppColors.color4,
             ),

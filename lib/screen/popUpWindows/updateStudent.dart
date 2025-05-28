@@ -2,6 +2,7 @@ import 'package:apk/commonWidget/commonButton.dart';
 import 'package:apk/commonWidget/font&color.dart';
 import 'package:apk/dataModel/model.dart';
 import 'package:apk/functions/classes.dart';
+import 'package:apk/screen/popUpWindows/alertMsg.dart';
 import 'package:flutter/material.dart';
 
 class attendStudent extends StatefulWidget {
@@ -11,6 +12,7 @@ class attendStudent extends StatefulWidget {
   final aStudent student;
   final int monthIndex;
   final aMonth month;
+  final String year;
   const attendStudent({
     Key? key,
     required this.indexOfDay,
@@ -19,6 +21,7 @@ class attendStudent extends StatefulWidget {
     required this.student,
     required this.monthIndex,
     required this.month,
+    required this.year,
   }) : super(key: key);
   @override
   State<attendStudent> createState() => _attendStudentState();
@@ -46,7 +49,12 @@ class _attendStudentState extends State<attendStudent> {
         width: MediaQuery.of(context).size.width * 0.9,
         child: Column(
           children: [
-            Center(child: Text("Attend Student", style: fontStyle.font3)),
+            Center(
+              child: Text(
+                "${getMonthName(widget.monthIndex + 1)} - Attend Student",
+                style: fontStyle.font3,
+              ),
+            ),
             Center(
               child: Container(
                 height: 1,
@@ -178,7 +186,7 @@ class _attendStudentState extends State<attendStudent> {
                   "Attend",
                   AppColors.color6,
                   () async {
-                    print('Tap on Update');
+                    showPending(context);
                     markAttendace(
                       context,
                       widget.classObject,
@@ -187,8 +195,8 @@ class _attendStudentState extends State<attendStudent> {
                       widget.indexOfDay,
                       widget.student.ID + " $state",
                       widget.day,
+                      widget.year,
                     );
-                    Navigator.of(context).pop();
                   },
                   AppColors.color4,
                 ),

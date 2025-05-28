@@ -1,5 +1,7 @@
 import 'package:apk/commonWidget/font&color.dart';
 import 'package:apk/dataModel/model.dart';
+import 'package:apk/functions/classes.dart';
+import 'package:apk/screen/popUpWindows/alertMsg.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -15,6 +17,33 @@ Future<void> InitilizeFireBaseClassPayment(
     DocumentReference documentRef = _firestore
         .collection('Payment')
         .doc(classID);
+
+    DocumentSnapshot documentSnapshot = await documentRef.get();
+    Map<String, dynamic>? data =
+        documentSnapshot.data() as Map<String, dynamic>?;
+
+    // Check if the year already exists
+    if (data != null && data.containsKey(year)) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: AppColors.color6,
+            content: Row(
+              children: [
+                Icon(Icons.info, color: AppColors.color3),
+                SizedBox(width: 10),
+                Text(
+                  "Year '$year' already exists for this class. Initialization skipped.",
+                  style: fontStyle.font3,
+                ),
+              ],
+            ),
+            duration: Duration(seconds: 4),
+          ),
+        );
+      }
+      return;
+    }
 
     await documentRef.set({year: m}, SetOptions(merge: true));
 
@@ -58,10 +87,11 @@ Future<void> InitilizeFireBaseClassPayment(
   }
 }
 
-Future<List<aMonth>?> getPaymentDetails(
+Future<aMonth> getAMonthDetails(
   BuildContext context,
   String year,
   String classID,
+  int monthIndex,
 ) async {
   try {
     DocumentReference documentRef = _firestore
@@ -76,35 +106,43 @@ Future<List<aMonth>?> getPaymentDetails(
       List<Map<String, dynamic>>? paymentDetails =
           data?[year]?.cast<Map<String, dynamic>>();
 
-      if (paymentDetails != null) {
-        List<aMonth> convertedDetails =
-            paymentDetails
-                .map((monthData) => aMonth.fromJson(monthData))
-                .toList();
-
-        if (context.mounted) {
-          print("Get payment details from firebase..!");
-        }
-        return convertedDetails;
+      if (paymentDetails != null &&
+          monthIndex >= 0 &&
+          monthIndex < paymentDetails.length) {
+        aMonth monthObj = aMonth.fromJson(paymentDetails[monthIndex]);
+        return monthObj;
       } else {
         if (context.mounted) {
-          print("Error coming when get payment details from firebase..!");
+          snackBarMsg(
+            context,
+            AppColors.color6,
+            "Invalid month index or no data found for the specified year.",
+            Icons.info,
+          );
         }
-        return null;
+        return nullMonthObject();
       }
     } else {
       if (context.mounted) {
-        print(
-          "Error coming when get payment details from firebase..! --No data found for the specified class ID.",
+        snackBarMsg(
+          context,
+          AppColors.color6,
+          "No data found for the specified class ID.",
+          Icons.info,
         );
       }
-      return null;
+      return nullMonthObject();
     }
   } on FirebaseException catch (e) {
     if (context.mounted) {
-      print("Error come when get payment details from firebase -- $e");
+      snackBarMsg(
+        context,
+        AppColors.color6,
+        "$e when get payment month",
+        Icons.info,
+      );
     }
-    return null;
+    return nullMonthObject();
   }
 }
 
@@ -113,8 +151,11 @@ Future<void> updatePayment(
   String classID,
   String year,
   aMonth updatedMonth,
-  int index,
 ) async {
+  int index =
+      getMonthIntFromName(updatedMonth.name) -
+      1; // Adjusting index to be zero-based
+  updatedMonth.classID = classID;
   try {
     DocumentReference documentRef = _firestore
         .collection('Payment')
@@ -146,7 +187,10 @@ Future<void> updatePayment(
                 children: [
                   Icon(Icons.check, color: AppColors.color4),
                   SizedBox(width: 10),
-                  Text("Payment updated successfully!", style: fontStyle.font3),
+                  Text(
+                    "Payment Month Details updated successfully!",
+                    style: fontStyle.font3,
+                  ),
                 ],
               ),
               duration: Duration(seconds: 4),
@@ -208,5 +252,113 @@ Future<void> updatePayment(
         ),
       );
     }
+  }
+}
+
+Future<List<aMonth>> getAllMonthDetails(
+  BuildContext context,
+  String year,
+  String classID,
+) async {
+  try {
+    DocumentReference documentRef = _firestore
+        .collection('Payment')
+        .doc(classID);
+
+    DocumentSnapshot documentSnapshot = await documentRef.get();
+
+    if (documentSnapshot.exists) {
+      Map<String, dynamic>? data =
+          documentSnapshot.data() as Map<String, dynamic>?;
+      List<dynamic>? paymentDetails = data?[year];
+
+      if (paymentDetails != null && paymentDetails.isNotEmpty) {
+        List<aMonth> monthList =
+            paymentDetails
+                .map((e) => aMonth.fromJson(Map<String, dynamic>.from(e)))
+                .toList();
+        return monthList;
+      } else {
+        if (context.mounted) {
+          snackBarMsg(
+            context,
+            AppColors.color6,
+            "No month data found for the specified year.",
+            Icons.info,
+          );
+        }
+        return [];
+      }
+    } else {
+      if (context.mounted) {
+        snackBarMsg(
+          context,
+          AppColors.color6,
+          "No data found for the specified class ID.",
+          Icons.info,
+        );
+      }
+      return [];
+    }
+  } on FirebaseException catch (e) {
+    if (context.mounted) {
+      snackBarMsg(
+        context,
+        AppColors.color6,
+        "$e when getting all payment months",
+        Icons.info,
+      );
+    }
+    return [];
+  }
+}
+
+Future<void> deleteClassDocument(BuildContext context, String classID) async {
+  try {
+    DocumentReference documentRef = _firestore
+        .collection('Payment')
+        .doc(classID);
+
+    await documentRef.delete();
+    snackBarMsg(
+      context,
+      AppColors.color5,
+      "Class document deleted successfully.",
+      Icons.check,
+    );
+  } on FirebaseException catch (e) {
+    snackBarMsg(
+      context,
+      AppColors.color6,
+      "Error deleting class document: ${e.message}",
+      Icons.error,
+    );
+  }
+}
+
+Future<List<String>> getAvailableYearsAClass(
+  BuildContext context,
+  String classID,
+) async {
+  try {
+    DocumentReference documentRef = _firestore
+        .collection('Payment')
+        .doc(classID);
+
+    DocumentSnapshot documentSnapshot = await documentRef.get();
+
+    if (documentSnapshot.exists) {
+      Map<String, dynamic>? data =
+          documentSnapshot.data() as Map<String, dynamic>?;
+      if (data != null) {
+        return data.keys.map((e) => e.toString()).toList();
+      } else {
+        return [];
+      }
+    } else {
+      return [];
+    }
+  } on FirebaseException {
+    return [];
   }
 }

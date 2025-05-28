@@ -2,9 +2,8 @@ import 'package:apk/commonWidget/font&color.dart';
 import 'package:apk/dataModel/model.dart';
 import 'package:apk/functions/classes.dart';
 import 'package:apk/functions/paymentInFunction.dart';
-import 'package:apk/screen/UIBuilding/dayList.dart';
-import 'package:apk/screen/classDashboard.dart';
 import 'package:apk/screen/collectPayment.dart';
+import 'package:apk/screen/popUpWindows/addANewClass.dart';
 import 'package:apk/screen/popUpWindows/alertMsg.dart';
 import 'package:flutter/material.dart';
 
@@ -17,34 +16,26 @@ GestureDetector listCardOnClassList(
   String teacher,
   String ID,
   aClass object,
+  String year,
 ) {
   //print("Student Name Is ${name[0]} ${name[1]}");
   return GestureDetector(
+    onLongPress: () {
+      popUpMsg(
+        context,
+        Colors.red,
+        "Are you sure..!",
+        "Are you sure to delete this class..?\nAll data will be lost..!",
+        () => deleteClassController(context, object),
+      );
+    },
     onTap: () async {
       showPending(context);
-      List<aMonth>? payment = await getPaymentController(
+      navigateToClassDashboard(
         context,
-        "2025",
-        object.ID,
-      );
-      if (payment != null && payment.isNotEmpty) {
-        await buildDayList(
-          context,
-          0,
-          payment[DateTime.now().month - 1],
-          object,
-          payment[DateTime.now().month - 1].attendance,
-        );
-      }
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder:
-              (context) => Classdashboard(
-                object: object,
-                month: payment?[DateTime.now().month - 1] ?? nullMonthObject(),
-              ),
-        ),
+        object,
+        DateTime.now().year.toString(),
+        DateTime.now().month,
       );
       print("Today month is : ${DateTime.now().month}");
     },
@@ -72,7 +63,23 @@ GestureDetector listCardOnClassList(
                 ),
               ),
               SizedBox(width: MediaQuery.of(context).size.width * 0.17),
-              Icon(Icons.settings, color: AppColors.color4),
+              GestureDetector(
+                onTap: () async {
+                  await showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return addANewClass(
+                        buttonText: "Update",
+                        isRegister: false,
+                        title: "Update Class Details",
+                        object: object,
+                      ); // Call your StatefulWidget
+                    },
+                  );
+                  //updateClassController(context, object);
+                },
+                child: Icon(Icons.settings, color: AppColors.color4),
+              ),
             ],
           ),
           SizedBox(height: MediaQuery.of(context).size.width * 0.01),
@@ -170,6 +177,7 @@ void addNewClassToList(
   String teacher,
   String ID,
   aClass object,
+  String year,
 ) {
   classList.add(SizedBox(height: 5));
   classList.add(
@@ -182,12 +190,17 @@ void addNewClassToList(
       teacher,
       ID,
       object,
+      year,
     ),
   );
 }
 
 //build student widget list
-Future<void> buildClassList(BuildContext context, List<aClass> objects) async {
+Future<void> buildClassList(
+  BuildContext context,
+  List<aClass> objects,
+  String year,
+) async {
   classList = []; // Clear the list before adding new items
   int l = objects.length;
   print("Lenth of array in Build Class List Is $l");
@@ -202,12 +215,9 @@ Future<void> buildClassList(BuildContext context, List<aClass> objects) async {
       objects[i].teacher,
       objects[i].ID,
       objects[i],
+      year,
     );
   }
-  // Navigator.push(
-  //   context,
-  //   MaterialPageRoute(builder: (context) => StudentList()),
-  // );
 }
 
 GestureDetector classCardOnStudent(
@@ -219,7 +229,12 @@ GestureDetector classCardOnStudent(
 ) {
   return GestureDetector(
     onTap: () async {
-      await waitForCollectPaymentPage(context, studentID, index);
+      await waitForCollectPaymentPage(
+        context,
+        studentID,
+        index,
+        DateTime.now().year.toString(),
+      );
     },
     child: Container(
       padding: EdgeInsets.only(top: 5, bottom: 5),

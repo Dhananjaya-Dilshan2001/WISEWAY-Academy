@@ -25,11 +25,13 @@ class tapOnMonth extends StatefulWidget {
   final aPayment paymentObject;
   final aMonth month;
   final int indexOfClass;
+  final String year;
   const tapOnMonth({
     super.key,
     required this.paymentObject,
     required this.month,
     required this.indexOfClass,
+    required this.year,
   });
   @override
   State<tapOnMonth> createState() => _tapOnMonthState();
@@ -59,7 +61,7 @@ class _tapOnMonthState extends State<tapOnMonth> {
         child: Column(
           children: [
             Text(
-              "${widget.paymentObject.year} - ${widget.paymentObject.month}",
+              "${widget.year} - ${widget.paymentObject.month}",
               style: fontStyle.font2,
             ),
             Container(
@@ -271,6 +273,7 @@ class _tapOnMonthState extends State<tapOnMonth> {
                       widget.paymentObject,
                       widget.month,
                       widget.indexOfClass,
+                      widget.year,
                     );
                   },
                   AppColors.color4,

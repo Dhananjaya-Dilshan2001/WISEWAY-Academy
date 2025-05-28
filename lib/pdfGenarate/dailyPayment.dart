@@ -28,17 +28,16 @@ Future<void> generatePaperBudgetPDF(
   List<aPayment> dailyPayment = filterPaymentAccordingToDay(
     allPaymentAMonth,
     date.toDate().day,
+    date.toDate().year.toString(),
   );
-
-  // List<studentPaperObject> KiribathgodaStudent = sortStudentsByNameO(
-  //   filterInstituteO(paper.attendance, "K"),
-  // );
-  // List<studentPaperObject> YakkalaStudent = sortStudentsByNameO(
+  int totalPayment = dailyPayment.fold(
+    0,
+    (sum, payment) => sum + payment.value,
+  );
 
   final ByteData bytes = await rootBundle.load('Image/wiseway logo.png');
   final Uint8List logoBytes = bytes.buffer.asUint8List();
   final pw.ImageProvider logoImage = pw.MemoryImage(logoBytes);
-  //paper.income = await setIncomeOfPaper(paper);
 
   try {
     final pdf = pw.Document();
@@ -74,7 +73,7 @@ Future<void> generatePaperBudgetPDF(
                 pw.Text(
                   "Date :${date.toDate().year}/${date.toDate().month}/${date.toDate().day}",
                   style: pw.TextStyle(
-                    fontSize: 24,
+                    fontSize: 18,
                     fontWeight: pw.FontWeight.bold,
                   ),
                 ),
@@ -119,30 +118,14 @@ Future<void> generatePaperBudgetPDF(
                           payment.classID,
                           'subject',
                         ),
-                        payment.reason,
-                        payment.value,
+                        "${payment.reason} - ${payment.month}",
+                        "${payment.value} /=",
                       ];
                     }).toList(),
               ),
               pw.SizedBox(height: 20),
               pw.Text(
-                "Payment Details",
-                style: pw.TextStyle(
-                  fontSize: 20,
-                  fontWeight: pw.FontWeight.bold,
-                ),
-              ),
-              pw.SizedBox(height: 10),
-              pw.Text(
-                "InstituteIncome",
-                style: pw.TextStyle(
-                  fontSize: 16,
-                  fontWeight: pw.FontWeight.normal,
-                ),
-              ),
-              pw.SizedBox(height: 10),
-              pw.Text(
-                "Total Income : {paper.income}/=",
+                "Total Income : $totalPayment/=",
                 style: pw.TextStyle(
                   fontSize: 16,
                   fontWeight: pw.FontWeight.bold,

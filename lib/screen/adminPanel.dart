@@ -2,12 +2,16 @@ import 'package:apk/commonWidget/commonButton.dart';
 import 'package:apk/commonWidget/drawer.dart';
 import 'package:apk/commonWidget/font&color.dart';
 import 'package:apk/dataModel/model.dart';
+import 'package:apk/firebase/classFunction.dart';
 import 'package:apk/firebase/studentFunctios.dart';
 import 'package:apk/functions/classes.dart';
+import 'package:apk/functions/sorting.dart';
 import 'package:apk/functions/student.dart';
+import 'package:apk/screen/UIBuilding/classListInPaymenteport.dart';
 import 'package:apk/screen/UIBuilding/studentList.dart';
+import 'package:apk/screen/appSetting.dart';
 import 'package:apk/screen/paymentReport.dart';
-import 'package:apk/screen/popUpWindows/addNewClass.dart';
+import 'package:apk/screen/popUpWindows/addANewClass.dart';
 import 'package:apk/screen/popUpWindows/alertMsg.dart';
 import 'package:apk/screen/popUpWindows/registerStudent.dart';
 import 'package:apk/screen/popUpWindows/searchStudent.dart';
@@ -82,7 +86,9 @@ class _adminPanelState extends State<adminPanel>
                         context: context,
                         builder: (BuildContext context) {
                           return registerStudent(
+                            isRegister: true,
                             student: nullStudentObject(),
+                            buttonText: "Register",
                           ); // Call your StatefulWidget
                         },
                       );
@@ -102,11 +108,15 @@ class _adminPanelState extends State<adminPanel>
                       await showDialog(
                         context: context,
                         builder: (BuildContext context) {
-                          return addNewClass(
+                          return addANewClass(
+                            isRegister: true,
+                            buttonText: "Register",
+                            title: "Add New Class",
                             object: nullClassObject(),
                           ); // Call your StatefulWidget
                         },
                       );
+
                       // Perform any action here
                     },
                     AppColors.color4,
@@ -141,7 +151,12 @@ class _adminPanelState extends State<adminPanel>
                       print('Tap View All Students');
                       showPending(context);
                       await getAllStudent(context);
-                      await buildStudentList(context, allStudent);
+                      await buildStudentList(
+                        context,
+                        sortStudentList(context, allStudent, "0"),
+                      );
+                      Navigator.pop(context);
+
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => StudentList()),
@@ -198,6 +213,8 @@ class _adminPanelState extends State<adminPanel>
                     "Budget\nReport",
                     AppColors.color3,
                     () async {
+                      await getAllClass(context);
+                      await buildClassListOnPaymentReport(context, allClass);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -211,6 +228,26 @@ class _adminPanelState extends State<adminPanel>
                     AppColors.color4,
                     Icons.bar_chart, // Changed icon to a report views icon
                   ),
+                  SizedBox(width: MediaQuery.of(context).size.width * 0.0325),
+                  commonButton.button3(
+                    MediaQuery.of(context).size.height * 0.12,
+                    MediaQuery.of(context).size.width * 0.25,
+                    "  App\nSetting",
+                    AppColors.color3,
+                    () async {
+                      await buildClassListOnPaymentReport(context, allClass);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => AppSetting()),
+                      );
+                      print('tap on App Setting');
+                      //
+                      // Perform any action here
+                    },
+                    AppColors.color4,
+                    Icons.settings, // Changed icon to a settings icon
+                  ),
+                  SizedBox(width: MediaQuery.of(context).size.width * 0.0325),
                 ],
               ),
             ),

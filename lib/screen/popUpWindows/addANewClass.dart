@@ -6,23 +6,51 @@ import 'package:apk/screen/popUpWindows/alertMsg.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class addNewClass extends StatefulWidget {
+class addANewClass extends StatefulWidget {
   final aClass object;
-  const addNewClass({super.key, required this.object});
+  final String title;
+  final String buttonText;
+  final bool isRegister;
+  const addANewClass({
+    super.key,
+    required this.object,
+    required this.title,
+    required this.buttonText,
+    required this.isRegister,
+  });
   @override
-  State<addNewClass> createState() => _addNewClassState();
+  State<addANewClass> createState() => _addANewClassState();
 }
 
-class _addNewClassState extends State<addNewClass> {
+class _addANewClassState extends State<addANewClass> {
   Color tapCambridge = AppColors.color6;
   Color tapEdexcel = AppColors.color2;
   Color tapOnline = AppColors.color2;
   Color tapPhysical = AppColors.color6;
 
-  initeState() {
+  @override
+  void initState() {
     super.initState();
-    widget.object.curriculm = "Cambridge";
-    widget.object.state = "Physical";
+    if (widget.object.curriculm.isEmpty) {
+      widget.object.curriculm = "Cambridge";
+    }
+    if (widget.object.state.isEmpty) {
+      widget.object.state = "Physical";
+    }
+    if (widget.object.curriculm == "Cambridge") {
+      tapCambridge = AppColors.color6;
+      tapEdexcel = AppColors.color2;
+    } else {
+      tapCambridge = AppColors.color2;
+      tapEdexcel = AppColors.color6;
+    }
+    if (widget.object.state == "Physical") {
+      tapPhysical = AppColors.color6;
+      tapOnline = AppColors.color2;
+    } else {
+      tapPhysical = AppColors.color2;
+      tapOnline = AppColors.color6;
+    }
     super.initState();
   }
 
@@ -31,12 +59,9 @@ class _addNewClassState extends State<addNewClass> {
     return AlertDialog(
       backgroundColor: AppColors.color2,
       content: SingleChildScrollView(
-        //padding: EdgeInsets.all(10.0),
-        //height: MediaQuery.of(context).size.height * 0.6,
-        //width: MediaQuery.of(context).size.width * 0.7,
         child: Column(
           children: [
-            Text("Add New Class", style: fontStyle.font2),
+            Text("${widget.title}", style: fontStyle.font2),
             Container(
               height: 1,
               width: MediaQuery.of(context).size.width * 0.7,
@@ -60,6 +85,9 @@ class _addNewClassState extends State<addNewClass> {
                     child: TextField(
                       style: fontStyle.font4,
                       decoration: InputDecoration(
+                        hintText:
+                            "${widget.object.subject.isEmpty ? "Enter Subject" : widget.object.subject}",
+                        hintStyle: TextStyle(color: AppColors.color4),
                         contentPadding: EdgeInsets.symmetric(horizontal: 10),
                         border: OutlineInputBorder(),
                       ),
@@ -93,6 +121,9 @@ class _addNewClassState extends State<addNewClass> {
                     child: TextField(
                       style: fontStyle.font4,
                       decoration: InputDecoration(
+                        hintText:
+                            "${widget.object.teacher.isEmpty ? "Enter Teacher" : widget.object.teacher}",
+                        hintStyle: TextStyle(color: AppColors.color4),
                         contentPadding: EdgeInsets.symmetric(horizontal: 10),
                         border: OutlineInputBorder(),
                       ),
@@ -110,24 +141,27 @@ class _addNewClassState extends State<addNewClass> {
             Row(
               children: [
                 Container(
-                  height: 25,
+                  height: 40,
                   width: MediaQuery.of(context).size.width * 0.15,
                   //color: AppColors.color5,
                   child: Text("Grade", style: fontStyle.font4),
                 ),
                 Container(
-                  height: 25,
+                  height: 40,
                   child: Text(":   ", style: fontStyle.font4),
                 ),
                 //SizedBox(width: 5,),
                 Container(
-                  height: 20,
+                  height: 40,
                   width: MediaQuery.of(context).size.width * 0.25,
                   //color: AppColors.color6,
                   child: TextField(
                     //keyboardType: TextInputType.number,
                     style: fontStyle.font4,
                     decoration: InputDecoration(
+                      hintText:
+                          "${widget.object.grade.isEmpty ? "Enter Grade" : widget.object.grade}",
+                      hintStyle: TextStyle(color: AppColors.color4),
                       counterStyle: TextStyle(
                         color:
                             AppColors
@@ -163,6 +197,9 @@ class _addNewClassState extends State<addNewClass> {
                     child: TextField(
                       style: fontStyle.font4,
                       decoration: InputDecoration(
+                        hintText:
+                            "${widget.object.note.isEmpty ? "Day time" : widget.object.note}",
+                        hintStyle: TextStyle(color: AppColors.color4),
                         contentPadding: EdgeInsets.symmetric(horizontal: 10),
                         border: OutlineInputBorder(),
                       ),
@@ -197,7 +234,11 @@ class _addNewClassState extends State<addNewClass> {
                   child: TextField(
                     keyboardType: TextInputType.number,
                     style: fontStyle.font4,
-                    decoration: InputDecoration(),
+                    decoration: InputDecoration(
+                      hintText:
+                          "${widget.object.whatsappNo.isEmpty ? "Enter No" : widget.object.whatsappNo}",
+                      hintStyle: TextStyle(color: AppColors.color4),
+                    ),
                     inputFormatters: [LengthLimitingTextInputFormatter(10)],
                     onChanged: (value) {
                       widget.object.whatsappNo = value;
@@ -344,10 +385,19 @@ class _addNewClassState extends State<addNewClass> {
                   GestureDetector(
                     onTap: () {
                       setState(() {
-                        widget.object.ID = generateClassID(
-                          context,
-                          widget.object,
-                        );
+                        if (widget.object.ID.isEmpty) {
+                          widget.object.ID = generateClassID(
+                            context,
+                            widget.object,
+                          );
+                        } else {
+                          snackBarMsg(
+                            context,
+                            AppColors.color6,
+                            "Class ID already generated",
+                            Icons.warning,
+                          );
+                        }
                       });
                     },
                     child: Container(
@@ -381,7 +431,6 @@ class _addNewClassState extends State<addNewClass> {
                   AppColors.color3,
                   () async {
                     print('Tap on Cancel');
-                    //tempStudent.setAllNull();
                     Navigator.of(context).pop();
                   },
                   AppColors.color4,
@@ -389,26 +438,30 @@ class _addNewClassState extends State<addNewClass> {
                 SizedBox(width: MediaQuery.of(context).size.width * 0.08),
                 commonButton.button4(
                   MediaQuery.of(context).size.width * 0.3,
-                  "Register",
+                  "${widget.buttonText}",
                   AppColors.color6,
                   () async {
-                    print('Tap on Register');
-                    if (isClassObjectNull(widget.object)) {
-                      popUpMsg(
-                        context,
-                        AppColors.color2,
-                        "Ready to Register..!",
-                        "All details are correct..?",
-                        () => addClassController(context, widget.object),
-                      );
+                    if (widget.isRegister) {
+                      print('Tap on Register');
+                      if (isClassObjectNull(widget.object)) {
+                        popUpMsg(
+                          context,
+                          AppColors.color2,
+                          "Ready to Register..!",
+                          "All details are correct..?",
+                          () => addClassController(context, widget.object),
+                        );
+                      } else {
+                        popUpMsg(
+                          context,
+                          AppColors.color6,
+                          "Error",
+                          "Fill the all details and try again..!",
+                          () => Navigator.of(context).pop(),
+                        );
+                      }
                     } else {
-                      popUpMsg(
-                        context,
-                        AppColors.color6,
-                        "Error",
-                        "Fill the all details and try again..!",
-                        () => Navigator.of(context).pop(),
-                      );
+                      updateClassController(context, widget.object);
                     }
                   },
                   AppColors.color4,

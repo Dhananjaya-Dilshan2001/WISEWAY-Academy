@@ -17,6 +17,9 @@ GestureDetector listCardOnViewStudent(
   int no,
   List<String> name,
   String ID,
+  bool removeButton,
+  bool removeButton2,
+  String year,
 ) {
   return GestureDetector(
     onTap:
@@ -33,12 +36,13 @@ GestureDetector listCardOnViewStudent(
                       day: month.attendance[indexOfDay],
                       monthIndex: monthIndex,
                       month: month,
+                      year: year,
                     ); // Call your StatefulWidget
                   },
                 );
               } else {
                 print("Card clicked: $ID");
-                addStudentIntoClassController(context, object, student);
+                addStudentIntoClassController(context, object, student, year);
                 print("Student added successfully to the class.");
               }
             }
@@ -66,7 +70,7 @@ GestureDetector listCardOnViewStudent(
           SizedBox(width: MediaQuery.of(context).size.width * 0.01),
           Container(
             height: MediaQuery.of(context).size.width * 0.08,
-            width: MediaQuery.of(context).size.width * 0.08,
+            width: MediaQuery.of(context).size.width * 0.05,
             decoration: BoxDecoration(
               color: AppColors.color4,
               shape: BoxShape.circle,
@@ -91,6 +95,37 @@ GestureDetector listCardOnViewStudent(
           Container(
             child: Text("${ID}", style: fontStyle.font5.copyWith(fontSize: 8)),
           ),
+          SizedBox(width: MediaQuery.of(context).size.width * 0.01),
+          Visibility(
+            visible: removeButton,
+            child: GestureDetector(
+              onTap: () {
+                removeStudentFromClassController(
+                  context,
+                  object,
+                  student,
+                  year,
+                );
+              },
+              child: Icon(Icons.remove_circle_outline, color: AppColors.color4),
+            ),
+          ),
+          Visibility(
+            visible: removeButton2,
+            child: GestureDetector(
+              onTap: () {
+                removeAttendance(
+                  context,
+                  object,
+                  student.ID,
+                  month,
+                  indexOfDay,
+                  year,
+                );
+              },
+              child: Icon(Icons.remove_circle_outline, color: AppColors.color4),
+            ),
+          ),
         ],
       ),
     ),
@@ -110,6 +145,9 @@ void addNewStudentToViewStudent(
   int no,
   List<String> name,
   String ID,
+  bool removeButton,
+  bool removeButton2,
+  String year,
 ) {
   viewStudent.add(SizedBox(height: 5));
   viewStudent.add(
@@ -125,6 +163,9 @@ void addNewStudentToViewStudent(
       no,
       name,
       ID,
+      removeButton,
+      removeButton2,
+      year,
     ),
   );
 }
@@ -139,10 +180,15 @@ Future<void> buildStudentListOnViewStudent(
   int indexOfMonth,
   aMonth month,
   int indexOfDay,
+  bool removeButton,
+  bool removeButton2,
+  String year,
 ) async {
   viewStudent = []; // Clear the list before adding new items
   int l = students.length;
-  print("Lenth of array in Build Student List Is $l");
+  print(
+    "Call buildStudentListOnViewStudent --- Passing Month Name Is ${month.name}",
+  );
 
   for (int i = 0; i < l; i++) {
     print("Student Name Is ${students[i].name}");
@@ -158,10 +204,9 @@ Future<void> buildStudentListOnViewStudent(
       i + 1,
       students[i].name.split(' '),
       students[i].ID,
+      removeButton,
+      removeButton2,
+      year,
     );
   }
-  // Navigator.push(
-  //   context,
-  //   MaterialPageRoute(builder: (context) => StudentList()),
-  // );
 }

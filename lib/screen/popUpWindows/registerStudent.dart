@@ -9,8 +9,15 @@ import 'package:flutter/services.dart';
 import 'package:date_field/date_field.dart';
 
 class registerStudent extends StatefulWidget {
+  final bool isRegister;
+  final String buttonText;
   final aStudent student;
-  const registerStudent({super.key, required this.student});
+  const registerStudent({
+    super.key,
+    required this.student,
+    required this.isRegister,
+    required this.buttonText,
+  });
   @override
   State<registerStudent> createState() => _registerStudentState();
 }
@@ -23,11 +30,40 @@ class _registerStudentState extends State<registerStudent> {
   Color tapOnline = AppColors.color2;
   Color tapPhysical = AppColors.color6;
 
+  String title = "";
+
   @override
   void initState() {
-    widget.student.gender = "Male";
-    widget.student.curriculm = "Cambridge";
-    widget.student.state = "Physical";
+    title =
+        widget.isRegister ? "Register A new Student" : "Update Student Details";
+
+    if (widget.student.gender == "Male") {
+      tapMale = AppColors.color6;
+      tapFemale = AppColors.color2;
+    } else {
+      tapMale = AppColors.color2;
+      tapFemale = AppColors.color6;
+    }
+    if (widget.student.curriculm == "Cambridge") {
+      tapCambridge = AppColors.color6;
+      tapEdexcel = AppColors.color2;
+    } else {
+      tapCambridge = AppColors.color2;
+      tapEdexcel = AppColors.color6;
+    }
+    if (widget.student.state == "Online") {
+      tapOnline = AppColors.color6;
+      tapPhysical = AppColors.color2;
+    } else {
+      tapOnline = AppColors.color2;
+      tapPhysical = AppColors.color6;
+    }
+    if (widget.student.ID.isEmpty) {
+      widget.student.gender = "Male";
+      widget.student.curriculm = "Cambridge";
+      widget.student.state = "Physical";
+    }
+
     super.initState();
   }
 
@@ -41,7 +77,7 @@ class _registerStudentState extends State<registerStudent> {
         //width: MediaQuery.of(context).size.width * 0.7,
         child: Column(
           children: [
-            Text("Register A new Student", style: fontStyle.font2),
+            Text(title, style: fontStyle.font2),
             Container(
               height: 1,
               width: MediaQuery.of(context).size.width * 0.7,
@@ -65,6 +101,13 @@ class _registerStudentState extends State<registerStudent> {
                     child: TextField(
                       style: fontStyle.font4,
                       decoration: InputDecoration(
+                        hintText:
+                            widget.student.name.isEmpty
+                                ? "Enter Student Name"
+                                : widget.student.name,
+                        hintStyle: fontStyle.font4.copyWith(
+                          color: AppColors.color4,
+                        ),
                         contentPadding: EdgeInsets.symmetric(horizontal: 10),
                         border: OutlineInputBorder(),
                       ),
@@ -98,6 +141,13 @@ class _registerStudentState extends State<registerStudent> {
                     child: TextField(
                       style: fontStyle.font4,
                       decoration: InputDecoration(
+                        hintText:
+                            widget.student.school.isEmpty
+                                ? "Enter School Name"
+                                : widget.student.school,
+                        hintStyle: fontStyle.font4.copyWith(
+                          color: AppColors.color4,
+                        ),
                         contentPadding: EdgeInsets.symmetric(horizontal: 10),
                         border: OutlineInputBorder(),
                       ),
@@ -115,23 +165,30 @@ class _registerStudentState extends State<registerStudent> {
             Row(
               children: [
                 Container(
-                  height: 25,
+                  height: 40,
                   width: MediaQuery.of(context).size.width * 0.15,
                   //color: AppColors.color5,
                   child: Text("Grade", style: fontStyle.font4),
                 ),
                 Container(
-                  height: 25,
+                  height: 40,
                   child: Text(":   ", style: fontStyle.font4),
                 ),
                 //SizedBox(width: 5,),
                 Container(
-                  height: 20,
+                  height: 40,
                   width: MediaQuery.of(context).size.width * 0.25,
                   //color: AppColors.color6,
                   child: TextField(
                     style: fontStyle.font4,
                     decoration: InputDecoration(
+                      hintText:
+                          widget.student.grade.isEmpty
+                              ? "Enter Grade"
+                              : widget.student.grade,
+                      hintStyle: fontStyle.font4.copyWith(
+                        color: AppColors.color4,
+                      ),
                       counterStyle: TextStyle(
                         color:
                             AppColors
@@ -210,7 +267,15 @@ class _registerStudentState extends State<registerStudent> {
                   child: TextField(
                     keyboardType: TextInputType.number,
                     style: fontStyle.font4,
-                    decoration: InputDecoration(),
+                    decoration: InputDecoration(
+                      hintText:
+                          widget.student.whatsappNo.isEmpty
+                              ? "Enter Whatsapp No"
+                              : widget.student.whatsappNo,
+                      hintStyle: fontStyle.font4.copyWith(
+                        color: AppColors.color4,
+                      ),
+                    ),
                     inputFormatters: [LengthLimitingTextInputFormatter(10)],
                     onChanged: (value) {
                       widget.student.whatsappNo = value;
@@ -240,7 +305,15 @@ class _registerStudentState extends State<registerStudent> {
                   child: TextField(
                     keyboardType: TextInputType.number,
                     style: fontStyle.font4,
-                    decoration: InputDecoration(),
+                    decoration: InputDecoration(
+                      hintText:
+                          widget.student.parentNo.isEmpty
+                              ? "Enter Parent's No"
+                              : widget.student.parentNo,
+                      hintStyle: fontStyle.font4.copyWith(
+                        color: AppColors.color4,
+                      ),
+                    ),
                     inputFormatters: [LengthLimitingTextInputFormatter(10)],
                     onChanged: (value) {
                       widget.student.parentNo = value;
@@ -269,10 +342,7 @@ class _registerStudentState extends State<registerStudent> {
                       GestureDetector(
                         onTap: () {
                           setState(() {
-                            tapMale =
-                                tapMale == AppColors.color2
-                                    ? AppColors.color6
-                                    : AppColors.color2;
+                            tapMale = AppColors.color6;
                             tapFemale = AppColors.color2;
                             if (tapMale == AppColors.color6) {
                               widget.student.gender = "Male";
@@ -297,10 +367,7 @@ class _registerStudentState extends State<registerStudent> {
                       GestureDetector(
                         onTap: () {
                           setState(() {
-                            tapFemale =
-                                tapFemale == AppColors.color2
-                                    ? AppColors.color6
-                                    : AppColors.color2;
+                            tapFemale = AppColors.color6;
                             tapMale = AppColors.color2;
                             if (tapFemale == AppColors.color6) {
                               widget.student.gender = "Female";
@@ -340,10 +407,7 @@ class _registerStudentState extends State<registerStudent> {
                       GestureDetector(
                         onTap: () {
                           setState(() {
-                            tapCambridge =
-                                tapCambridge == AppColors.color2
-                                    ? AppColors.color6
-                                    : AppColors.color2;
+                            tapCambridge = AppColors.color6;
                             tapEdexcel = AppColors.color2;
                             if (tapCambridge == AppColors.color6) {
                               widget.student.curriculm = "Cambridge";
@@ -368,10 +432,7 @@ class _registerStudentState extends State<registerStudent> {
                       GestureDetector(
                         onTap: () {
                           setState(() {
-                            tapEdexcel =
-                                tapEdexcel == AppColors.color2
-                                    ? AppColors.color6
-                                    : AppColors.color2;
+                            tapEdexcel = AppColors.color6;
                             tapCambridge = AppColors.color2;
                             if (tapEdexcel == AppColors.color6) {
                               widget.student.curriculm = "Edexcel";
@@ -407,10 +468,7 @@ class _registerStudentState extends State<registerStudent> {
                       GestureDetector(
                         onTap: () {
                           setState(() {
-                            tapOnline =
-                                tapOnline == AppColors.color2
-                                    ? AppColors.color6
-                                    : AppColors.color2;
+                            tapOnline = AppColors.color6;
                             tapPhysical = AppColors.color2;
                             if (tapOnline == AppColors.color6) {
                               widget.student.state = "Online";
@@ -435,10 +493,7 @@ class _registerStudentState extends State<registerStudent> {
                       GestureDetector(
                         onTap: () {
                           setState(() {
-                            tapPhysical =
-                                tapPhysical == AppColors.color2
-                                    ? AppColors.color6
-                                    : AppColors.color2;
+                            tapPhysical = AppColors.color6;
                             tapOnline = AppColors.color2;
                             if (tapPhysical == AppColors.color6) {
                               widget.student.state = "Physical";
@@ -468,10 +523,19 @@ class _registerStudentState extends State<registerStudent> {
             GestureDetector(
               onTap: () async {
                 setState(() {
-                  widget.student.ID = genarateStudentID(
-                    context,
-                    widget.student,
-                  );
+                  if (widget.student.ID.isEmpty) {
+                    widget.student.ID = genarateStudentID(
+                      context,
+                      widget.student,
+                    );
+                  } else {
+                    snackBarMsg(
+                      context,
+                      AppColors.color6,
+                      "Student ID already generated",
+                      Icons.error,
+                    );
+                  }
                 });
               },
               child: Container(
@@ -507,36 +571,41 @@ class _registerStudentState extends State<registerStudent> {
                   "Cancel",
                   AppColors.color3,
                   () async {
-                    print('Tap on Cancel');
-                    //tempStudent.setAllNull();
                     Navigator.of(context).pop();
+
+                    //tempStudent.setAllNull();
                   },
                   AppColors.color4,
                 ),
                 SizedBox(width: MediaQuery.of(context).size.width * 0.08),
                 commonButton.button4(
                   MediaQuery.of(context).size.width * 0.3,
-                  "Register",
+                  "${widget.buttonText}",
                   AppColors.color6,
                   () async {
-                    print('Tap on Register');
-                    if (isStudentObjectNull(widget.student)) {
-                      popUpMsg(
-                        context,
-                        AppColors.color2,
-                        "Ready to Register..!",
-                        "All details are correct..?",
-                        () =>
-                            registerStudentController(context, widget.student),
-                      );
+                    if (widget.isRegister) {
+                      if (isStudentObjectNull(widget.student)) {
+                        popUpMsg(
+                          context,
+                          AppColors.color2,
+                          "Ready to Register..!",
+                          "All details are correct..?",
+                          () => registerStudentController(
+                            context,
+                            widget.student,
+                          ),
+                        );
+                      } else {
+                        popUpMsg(
+                          context,
+                          AppColors.color6,
+                          "Error",
+                          "Fill the all details and try again..!",
+                          () => Navigator.of(context).pop(),
+                        );
+                      }
                     } else {
-                      popUpMsg(
-                        context,
-                        AppColors.color6,
-                        "Error",
-                        "Fill the all details and try again..!",
-                        () => Navigator.of(context).pop(),
-                      );
+                      updateStudentController(context, widget.student);
                     }
                   },
                   AppColors.color4,

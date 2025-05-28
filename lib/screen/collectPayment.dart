@@ -1,14 +1,24 @@
 import 'package:apk/commonWidget/font&color.dart';
 import 'package:apk/dataModel/model.dart';
+import 'package:apk/functions/classes.dart';
+import 'package:apk/functions/paymentInFunction.dart';
 import 'package:apk/screen/UIBuilding/monthList.dart';
 import 'package:apk/screen/adminPanel.dart';
+import 'package:apk/screen/popUpWindows/alertMsg.dart';
 import 'package:flutter/material.dart';
 
 List<Widget> classListOnStudent = [];
 
 class Collectpayment extends StatefulWidget {
   final aStudent student;
-  Collectpayment({super.key, required this.student});
+  final String year;
+  final int indexOfClass;
+  Collectpayment({
+    super.key,
+    required this.student,
+    required this.year,
+    required this.indexOfClass,
+  });
   @override
   State<Collectpayment> createState() => _CollectpaymentState();
 }
@@ -48,7 +58,7 @@ class _CollectpaymentState extends State<Collectpayment> {
           SizedBox(height: MediaQuery.of(context).size.height * 0.01),
           Center(
             child: Container(
-              height: MediaQuery.of(context).size.height * 0.9,
+              height: MediaQuery.of(context).size.height * 0.85,
               width: MediaQuery.of(context).size.width * 0.9,
               //color: AppColors.color1,
               decoration: BoxDecoration(
@@ -120,6 +130,20 @@ class _CollectpaymentState extends State<Collectpayment> {
                       SizedBox(width: MediaQuery.of(context).size.width * 0.01),
                       GestureDetector(
                         onTap: () async {
+                          showPending(context);
+                          commonYear = await yearShiftController(
+                            context,
+                            widget.student.classID[widget.indexOfClass],
+                            commonYear,
+                            false,
+                          );
+                          Navigator.pop(context);
+                          waitForCollectPaymentPage(
+                            context,
+                            widget.student.ID,
+                            widget.indexOfClass,
+                            commonYear,
+                          );
                           //viewAllStudentController(context);
                         },
                         child: Container(
@@ -133,11 +157,24 @@ class _CollectpaymentState extends State<Collectpayment> {
                         ),
                       ),
                       SizedBox(width: MediaQuery.of(context).size.width * 0.03),
-                      Text("2025", style: fontStyle.font2),
+                      Text("${widget.year}", style: fontStyle.font2),
                       SizedBox(width: MediaQuery.of(context).size.width * 0.03),
                       GestureDetector(
                         onTap: () async {
-                          //viewAllStudentController(context);
+                          showPending(context);
+                          commonYear = await yearShiftController(
+                            context,
+                            widget.student.classID[widget.indexOfClass],
+                            commonYear,
+                            true,
+                          );
+                          Navigator.pop(context);
+                          waitForCollectPaymentPage(
+                            context,
+                            widget.student.ID,
+                            widget.indexOfClass,
+                            commonYear,
+                          );
                         },
                         child: Container(
                           height: MediaQuery.of(context).size.width * 0.1,
@@ -154,6 +191,7 @@ class _CollectpaymentState extends State<Collectpayment> {
                   SizedBox(height: MediaQuery.of(context).size.height * 0.01),
 
                   Column(children: monthCard),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.05),
                 ],
               ),
             ),

@@ -1,7 +1,14 @@
 import 'package:apk/commonWidget/commonButton.dart';
 import 'package:apk/commonWidget/font&color.dart';
+import 'package:apk/dataModel/model.dart';
+import 'package:apk/functions/classes.dart';
+import 'package:apk/functions/paymentReport.dart';
+import 'package:apk/screen/UIBuilding/classListInPaymenteport.dart';
 import 'package:apk/screen/adminPanel.dart';
+import 'package:apk/screen/popUpWindows/alertMsg.dart';
 import 'package:flutter/material.dart';
+
+int indexOfMonthOnPaymentReport = 0;
 
 class paymentReport extends StatefulWidget {
   const paymentReport({super.key});
@@ -13,6 +20,7 @@ class _paymentReportState extends State<paymentReport> {
   // ignore: annotate_overrides
   void initState() {
     super.initState();
+    indexOfMonthOnPaymentReport = DateTime.now().month - 1;
     setState(() {
       print("Trigger payment Report UI..!");
     });
@@ -56,7 +64,17 @@ class _paymentReportState extends State<paymentReport> {
                       SizedBox(width: MediaQuery.of(context).size.width * 0.01),
                       GestureDetector(
                         onTap: () async {
-                          //viewAllStudentController(context);
+                          showPending(context);
+                          commonYear = await yearShiftController(
+                            context,
+                            allClass[0].ID,
+                            commonYear,
+                            false,
+                          );
+                          Navigator.pop(context);
+                          setState(() {
+                            print("Year Changed to $commonYear");
+                          });
                         },
                         child: Container(
                           height: MediaQuery.of(context).size.width * 0.1,
@@ -69,11 +87,21 @@ class _paymentReportState extends State<paymentReport> {
                         ),
                       ),
                       SizedBox(width: MediaQuery.of(context).size.width * 0.03),
-                      Text("2025", style: fontStyle.font2),
+                      Text("$commonYear", style: fontStyle.font2),
                       SizedBox(width: MediaQuery.of(context).size.width * 0.03),
                       GestureDetector(
                         onTap: () async {
-                          //viewAllStudentController(context);
+                          showPending(context);
+                          commonYear = await yearShiftController(
+                            context,
+                            allClass[0].ID,
+                            commonYear,
+                            true,
+                          );
+                          Navigator.pop(context);
+                          setState(() {
+                            print("Year Changed to $commonYear");
+                          });
                         },
                         child: Container(
                           height: MediaQuery.of(context).size.width * 0.1,
@@ -94,7 +122,11 @@ class _paymentReportState extends State<paymentReport> {
                       SizedBox(width: MediaQuery.of(context).size.width * 0.01),
                       GestureDetector(
                         onTap: () async {
-                          //viewAllStudentController(context);
+                          if (indexOfMonthOnPaymentReport > 0) {
+                            setState(() {
+                              indexOfMonthOnPaymentReport--;
+                            });
+                          }
                         },
                         child: Container(
                           height: MediaQuery.of(context).size.width * 0.1,
@@ -107,11 +139,18 @@ class _paymentReportState extends State<paymentReport> {
                         ),
                       ),
                       SizedBox(width: MediaQuery.of(context).size.width * 0.03),
-                      Text("January", style: fontStyle.font2),
+                      Text(
+                        "${getMonthName(indexOfMonthOnPaymentReport + 1)}",
+                        style: fontStyle.font2,
+                      ),
                       SizedBox(width: MediaQuery.of(context).size.width * 0.03),
                       GestureDetector(
                         onTap: () async {
-                          //viewAllStudentController(context);
+                          if (indexOfMonthOnPaymentReport < 11) {
+                            setState(() {
+                              indexOfMonthOnPaymentReport++;
+                            });
+                          }
                         },
                         child: Container(
                           height: MediaQuery.of(context).size.width * 0.1,
@@ -136,8 +175,7 @@ class _paymentReportState extends State<paymentReport> {
                       "Summery",
                       AppColors.color6,
                       () async {
-                        print('Tap Download');
-                        // Perform download action here
+                        allClassPdfGenarateController(context, commonYear);
                       },
                       AppColors.color4,
                       Icons.download,
@@ -153,7 +191,7 @@ class _paymentReportState extends State<paymentReport> {
               height: MediaQuery.of(context).size.height * 0.6,
               width: MediaQuery.of(context).size.width * 0.9,
               //color: AppColors.color5,
-              child: ListView(
+              child: Column(
                 children: [
                   Center(child: Text("Classes", style: fontStyle.font3)),
                   Container(
@@ -162,53 +200,7 @@ class _paymentReportState extends State<paymentReport> {
                     color: AppColors.color4,
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-                  Container(
-                    padding: EdgeInsets.all(10),
-                    height: MediaQuery.of(context).size.height * 0.11,
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    decoration: BoxDecoration(
-                      color: AppColors.color2.withOpacity(0.7),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          height: MediaQuery.of(context).size.height * 0.11,
-                          width: MediaQuery.of(context).size.width * 0.6,
-                          //color: AppColors.color5,
-                          child: Column(
-                            children: [
-                              Text(
-                                "Mathematics Edexcel - G10\nIshan Sir",
-                                style: fontStyle.font3,
-                              ),
-                              //Text("Ishan Sir", style: fontStyle.font3),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.01,
-                        ),
-                        Container(
-                          alignment: Alignment.centerRight,
-                          height: MediaQuery.of(context).size.height * 0.1,
-                          width: MediaQuery.of(context).size.width * 0.2,
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.download_for_offline,
-                              color: AppColors.color4,
-                              size: MediaQuery.of(context).size.width * 0.15,
-                            ),
-                            onPressed: () {
-                              print('Download document');
-                              // Add download functionality here
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  Column(children: classListOnPaymentReport),
                 ],
               ),
             ),

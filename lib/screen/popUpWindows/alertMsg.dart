@@ -42,7 +42,7 @@ void popUpMsg(
             onPressed: () {
               ontap();
             },
-            child: Text('OK', style: fontStyle.font2),
+            child: Text('Yes', style: fontStyle.font2),
           ),
         ],
       );

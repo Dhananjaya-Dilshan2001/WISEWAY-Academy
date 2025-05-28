@@ -1,8 +1,6 @@
 import 'package:apk/dataModel/model.dart';
 import 'package:apk/firebase/payment.dart';
-import 'package:apk/functions/paymentInFunction.dart';
-import 'package:apk/screen/UIBuilding/dayList.dart';
-import 'package:apk/screen/classDashboard.dart';
+import 'package:apk/functions/classes.dart';
 import 'package:apk/screen/popUpWindows/alertMsg.dart';
 import 'package:flutter/material.dart';
 
@@ -12,35 +10,37 @@ Future<void> addDayController(
   aMonth month,
   int monthIndex,
   aDay day,
+  String year,
 ) async {
   showPending(context);
   print("Month ${month.name} Month Index--$monthIndex");
+  day.classID = classObject.ID;
   month.attendance.add(day);
-  await updatePayment(context, classObject.ID, "2025", month, monthIndex - 1);
+  await updatePayment(context, classObject.ID, year, month);
   //Navigator.pop(context);
 
-  List<aMonth>? payment = await getPaymentController(
+  navigateToClassDashboard(
     context,
-    "2025",
-    classObject.ID,
+    classObject,
+    year,
+    getMonthIntFromName(month.name),
   );
-  if (payment != null && payment.isNotEmpty) {
-    await buildDayList(
-      context,
-      0,
-      payment[DateTime.now().month - 1],
-      classObject,
-      payment[DateTime.now().month - 1].attendance,
-    );
-  }
-  Navigator.push(
+}
+
+void deleteDayFromMonth(
+  BuildContext context,
+  aMonth month,
+  aClass classObject,
+  int dayIndex,
+  String year,
+) async {
+  showPending(context);
+  month.attendance.removeAt(dayIndex);
+  await updatePayment(context, classObject.ID, year, month);
+  navigateToClassDashboard(
     context,
-    MaterialPageRoute(
-      builder:
-          (context) => Classdashboard(
-            object: classObject,
-            month: payment?[DateTime.now().month - 1] ?? nullMonthObject(),
-          ),
-    ),
+    classObject,
+    year,
+    getMonthIntFromName(month.name),
   );
 }

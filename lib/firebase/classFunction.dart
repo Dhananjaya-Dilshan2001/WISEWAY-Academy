@@ -156,3 +156,91 @@ Future<void> updateClass(BuildContext context, aClass object) async {
     }
   }
 }
+
+Future<void> deleteClass(BuildContext context, aClass object) async {
+  try {
+    DocumentReference documentRef = _firestore
+        .collection('WISEWAY Academy')
+        .doc("class");
+
+    DocumentSnapshot documentSnapshot = await documentRef.get();
+    if (documentSnapshot.exists) {
+      List<dynamic> classList = List.from(documentSnapshot['class']);
+      int indexToDelete = classList.indexWhere(
+        (item) => item['ID'] == object.ID,
+      );
+
+      if (indexToDelete != -1) {
+        classList.removeAt(indexToDelete);
+        await documentRef.update({'class': classList});
+
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: AppColors.color5,
+              content: Row(
+                children: [
+                  Icon(Icons.check, color: AppColors.color4),
+                  SizedBox(width: 10),
+                  Text("Class deleted successfully..!", style: fontStyle.font3),
+                ],
+              ),
+              duration: Duration(seconds: 4),
+            ),
+          );
+        }
+      } else {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: AppColors.color6,
+              content: Row(
+                children: [
+                  Icon(Icons.warning_amber, color: AppColors.color3),
+                  SizedBox(width: 10),
+                  Text("Class not found."),
+                ],
+              ),
+              duration: Duration(seconds: 4),
+            ),
+          );
+        }
+      }
+    } else {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: AppColors.color6,
+            content: Row(
+              children: [
+                Icon(Icons.warning_amber, color: AppColors.color3),
+                SizedBox(width: 10),
+                Text("Document does not exist."),
+              ],
+            ),
+            duration: Duration(seconds: 4),
+          ),
+        );
+      }
+    }
+  } on FirebaseException catch (e) {
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: AppColors.color6,
+          content: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                Icon(Icons.warning_amber, color: AppColors.color3),
+                SizedBox(width: 10),
+                Text('Error: ${e.message}'),
+              ],
+            ),
+          ),
+          duration: Duration(seconds: 5),
+        ),
+      );
+    }
+  }
+}

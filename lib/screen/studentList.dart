@@ -1,7 +1,14 @@
 import 'package:apk/commonWidget/font&color.dart';
+import 'package:apk/functions/sorting.dart';
 import 'package:apk/functions/student.dart';
+import 'package:apk/screen/UIBuilding/studentList.dart';
 import 'package:apk/screen/adminPanel.dart';
 import 'package:flutter/material.dart';
+
+Color tapCambridge = AppColors.color1;
+Color tapEdexcel = AppColors.color1;
+Color tapAllGrade = AppColors.color6;
+String tapGrade = "0";
 
 class StudentList extends StatefulWidget {
   const StudentList({super.key});
@@ -12,6 +19,11 @@ class StudentList extends StatefulWidget {
 class _StudentListState extends State<StudentList> {
   // ignore: annotate_overrides
   void initState() {
+    tapCambridge = AppColors.color1;
+    tapEdexcel = AppColors.color1;
+    tapAllGrade = AppColors.color6;
+
+    buildGradeList(context, allStudent, "0");
     super.initState();
     setState(() {
       print("Trigger student List UI..!");
@@ -59,19 +71,21 @@ class _StudentListState extends State<StudentList> {
                         Row(
                           children: [
                             GestureDetector(
-                              onTap: () {
-                                //setState(() {
-                                //   tapCambridge = tapCambridge == AppColors.color1
-                                //       ? AppColors.color5
-                                //       : AppColors.color1;
-                                //   tapEdexcel = AppColors.color1;
-                                //   sortTrigger(context);
-                                // });
-                                // if (tapCambridge == AppColors.color5) {
-                                //   //gym.tempMember.gender = "Male";
-                                // } else {
-                                //   //gym.tempMember.gender = "Female";
-                                //}
+                              onTap: () async {
+                                setState(() {
+                                  tapCambridge == AppColors.color6
+                                      ? tapCambridge = AppColors.color1
+                                      : tapCambridge = AppColors.color6;
+                                  tapEdexcel = AppColors.color1;
+                                  buildStudentList(
+                                    context,
+                                    sortStudentList(
+                                      context,
+                                      allStudent,
+                                      tapGrade,
+                                    ),
+                                  );
+                                });
                               },
                               child: Container(
                                 height: 30,
@@ -83,27 +97,28 @@ class _StudentListState extends State<StudentList> {
                                   ),
                                 ),
                                 decoration: BoxDecoration(
-                                  color: AppColors.color6,
+                                  color: tapCambridge,
                                   borderRadius: BorderRadius.circular(5.0),
                                 ),
                               ),
                             ),
                             SizedBox(width: 3),
                             GestureDetector(
-                              onTap: () {
-                                // setState(() {
-                                //   tapEdexcel =
-                                //   tapEdexcel == AppColors.color1
-                                //       ? AppColors.color5
-                                //       : AppColors.color1;
-                                //   tapCambridge= AppColors.color1;
-                                //   sortTrigger(context);
-                                // });
-                                // if (tapEdexcel == AppColors.color5) {
-                                //   //gym.tempMember.gender = "Female";
-                                // } else {
-                                //   //gym.tempMember.gender = "Male";
-                                // }
+                              onTap: () async {
+                                setState(() {
+                                  tapEdexcel == AppColors.color6
+                                      ? tapEdexcel = AppColors.color1
+                                      : tapEdexcel = AppColors.color6;
+                                  tapCambridge = AppColors.color1;
+                                  buildStudentList(
+                                    context,
+                                    sortStudentList(
+                                      context,
+                                      allStudent,
+                                      tapGrade,
+                                    ),
+                                  );
+                                });
                               },
                               child: Container(
                                 height: 30,
@@ -115,7 +130,7 @@ class _StudentListState extends State<StudentList> {
                                   ),
                                 ),
                                 decoration: BoxDecoration(
-                                  color: AppColors.color6,
+                                  color: tapEdexcel,
                                   borderRadius: BorderRadius.circular(5.0),
                                 ),
                               ),
@@ -134,20 +149,15 @@ class _StudentListState extends State<StudentList> {
                       children: [
                         Text("Grade", style: fontStyle.font2),
                         GestureDetector(
-                          onTap: () {
-                            // setState(()  {
-                            //   tapAll = tapAll == AppColors.color1
-                            //       ? AppColors.color5
-                            //       : AppColors.color1;
-                            //   tapOnYakkala = AppColors.color1;
-                            //   tapOnKiribathgoda = AppColors.color1;
-                            //   sortTrigger(context);
-                            // });
-                            // if (tapAll == AppColors.color5) {
-                            //   //gym.tempMember.gender = "Male";
-                            // } else {
-                            //   //gym.tempMember.gender = "Female";
-                            // }
+                          onTap: () async {
+                            await buildStudentList(
+                              context,
+                              sortStudentList(context, allStudent, "0"),
+                            );
+                            setState(() {
+                              tapAllGrade = AppColors.color6;
+                              buildGradeList(context, allStudent, "0");
+                            });
                           },
                           child: Container(
                             height: 30,
@@ -156,7 +166,7 @@ class _StudentListState extends State<StudentList> {
                               child: Text("All", style: fontStyle.font5),
                             ),
                             decoration: BoxDecoration(
-                              color: AppColors.color6,
+                              color: tapAllGrade,
                               borderRadius: BorderRadius.circular(5.0),
                             ),
                           ),
@@ -166,100 +176,7 @@ class _StudentListState extends State<StudentList> {
                         ),
                         SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  // setState(()  {
-                                  //   tapAll = tapAll == AppColors.color1
-                                  //       ? AppColors.color5
-                                  //       : AppColors.color1;
-                                  //   tapOnYakkala = AppColors.color1;
-                                  //   tapOnKiribathgoda = AppColors.color1;
-                                  //   sortTrigger(context);
-                                  // });
-                                  // if (tapAll == AppColors.color5) {
-                                  //   //gym.tempMember.gender = "Male";
-                                  // } else {
-                                  //   //gym.tempMember.gender = "Female";
-                                  // }
-                                },
-                                child: Container(
-                                  height: 30,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.1,
-                                  child: Center(
-                                    child: Text("08", style: fontStyle.font5),
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.color6,
-                                    borderRadius: BorderRadius.circular(5.0),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(width: 3),
-                              GestureDetector(
-                                onTap: () {
-                                  // setState(() {
-                                  //   tapOnKiribathgoda = tapOnKiribathgoda == AppColors.color1
-                                  //       ? AppColors.color5
-                                  //       : AppColors.color1;
-                                  //   tapOnYakkala = AppColors.color1;
-                                  //   tapAll = AppColors.color1;
-                                  //   sortTrigger(context);
-                                  // });
-                                  // if (tapOnKiribathgoda == AppColors.color5) {
-                                  //   //gym.tempMember.gender = "Male";
-                                  // } else {
-                                  //   //gym.tempMember.gender = "Female";
-                                  // }
-                                },
-                                child: Container(
-                                  height: 30,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.1,
-                                  child: Center(
-                                    child: Text("09", style: fontStyle.font5),
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.color6,
-                                    borderRadius: BorderRadius.circular(5.0),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(width: 3),
-                              GestureDetector(
-                                onTap: () {
-                                  //setState(() {
-                                  //   tapOnYakkala =
-                                  //   tapOnYakkala == AppColors.color1
-                                  //       ? AppColors.color5
-                                  //       : AppColors.color1;
-                                  //   tapOnKiribathgoda= AppColors.color1;
-                                  //   tapAll = AppColors.color1;
-                                  //   sortTrigger(context);
-                                  // });
-                                  // if (tapOnYakkala == AppColors.color5) {
-                                  //   //gym.tempMember.gender = "Female";
-                                  // } else {
-                                  //   //gym.tempMember.gender = "Male";
-                                  // }
-                                },
-                                child: Container(
-                                  height: 30,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.1,
-                                  child: Center(
-                                    child: Text("10", style: fontStyle.font5),
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.color6,
-                                    borderRadius: BorderRadius.circular(5.0),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                          child: Row(children: gradeList),
                         ),
                       ],
                     ),

@@ -1,5 +1,8 @@
 import 'package:apk/commonWidget/font&color.dart';
+import 'package:apk/dataModel/model.dart';
 import 'package:apk/functions/paymentInFunction.dart';
+import 'package:apk/screen/popUpWindows/alertMsg.dart';
+import 'package:apk/screen/popUpWindows/qrScanner.dart';
 import 'package:flutter/material.dart';
 
 String searchStudentID = "";
@@ -35,7 +38,7 @@ class _searchStudentState extends State<searchStudent> {
               children: [
                 SizedBox(width: MediaQuery.of(context).size.width * 0.01),
                 Container(
-                  height: MediaQuery.of(context).size.height * 0.03,
+                  height: MediaQuery.of(context).size.height * 0.04,
                   width: MediaQuery.of(context).size.width * 0.4,
                   child: TextField(
                     onChanged: (value) {
@@ -75,14 +78,24 @@ class _searchStudentState extends State<searchStudent> {
                 SizedBox(width: MediaQuery.of(context).size.width * 0.01),
                 GestureDetector(
                   onTap: () async {
-                    await waitForCollectPaymentPage(
-                      context,
-                      "C10-0423-0504",
-                      0,
-                    );
+                    if (searchStudentID.length == 13) {
+                      await waitForCollectPaymentPage(
+                        context,
+                        searchStudentID,
+                        0,
+                        "${DateTime.now().year}",
+                      );
+                    } else {
+                      snackBarMsg(
+                        context,
+                        AppColors.color6,
+                        "Invalid Student ID",
+                        Icons.warning,
+                      );
+                    }
                   },
                   child: Container(
-                    height: MediaQuery.of(context).size.height * 0.03,
+                    height: MediaQuery.of(context).size.height * 0.05,
                     width: MediaQuery.of(context).size.width * 0.12,
                     child: Image.asset("Image/search.png"),
                     decoration: BoxDecoration(
@@ -94,12 +107,28 @@ class _searchStudentState extends State<searchStudent> {
                 SizedBox(width: MediaQuery.of(context).size.width * 0.01),
                 GestureDetector(
                   onTap: () async {
-                    //viewAllStudentController(context);
+                    await showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return QRScannerPage(
+                          purpose: 0,
+                          classObject: nullClassObject(),
+                          indexOfDay: 0,
+                          month: nullMonthObject(),
+                          monthIndex: 0,
+                          year: "${DateTime.now().year}",
+                        ); // Call your StatefulWidget
+                      },
+                    );
                   },
                   child: Container(
-                    height: MediaQuery.of(context).size.height * 0.03,
+                    height: MediaQuery.of(context).size.height * 0.05,
                     width: MediaQuery.of(context).size.width * 0.12,
-                    child: Icon(Icons.qr_code_scanner, color: Colors.white),
+                    child: Icon(
+                      Icons.qr_code_scanner,
+                      color: Colors.white,
+                      size: MediaQuery.of(context).size.width * 0.1,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.color6,
                       borderRadius: BorderRadius.circular(5.0),

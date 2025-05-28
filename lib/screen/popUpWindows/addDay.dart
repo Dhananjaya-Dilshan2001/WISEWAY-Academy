@@ -272,6 +272,7 @@ class _addDayState extends State<addDay> {
                       widget.monthObject,
                       widget.monthIndex,
                       widget.object,
+                      commonYear,
                     );
                   },
                   AppColors.color4,

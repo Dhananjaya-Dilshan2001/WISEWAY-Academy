@@ -60,6 +60,7 @@ Row unPaidCard(
   String classID,
   String studentID,
   int indexOfClass,
+  String year,
 ) {
   //print("Student Name Is ${name[0]} ${name[1]}");
   return Row(
@@ -76,7 +77,7 @@ Row unPaidCard(
         onTap: () async {
           await waitForCollectPayment(
             context,
-            "2025",
+            year,
             month,
             classID,
             studentID,
@@ -124,6 +125,7 @@ Future<void> buildMonthList(
   String classID,
   String studentID,
   int indexOfClass,
+  String year,
 ) async {
   monthCard = [];
 
@@ -141,9 +143,6 @@ Future<void> buildMonthList(
         List<String> parts = entry.split(' ');
         return parts.isNotEmpty && parts[0] == studentID;
       });
-      // Extract payment details
-      // Example: "StudentID Paid - 3000 - Cash"
-      // parts[2] = amount, parts[4] = method (if format is consistent)
       List<String> parts = paidEntry.split(' ');
       String state = parts[2];
       monthCard.add(SizedBox(height: 5));
@@ -151,7 +150,14 @@ Future<void> buildMonthList(
     } else {
       monthCard.add(SizedBox(height: 5));
       monthCard.add(
-        unPaidCard(context, allMonth[i], classID, studentID, indexOfClass),
+        unPaidCard(
+          context,
+          allMonth[i],
+          classID,
+          studentID,
+          indexOfClass,
+          year,
+        ),
       );
     }
   }

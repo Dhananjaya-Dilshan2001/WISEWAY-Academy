@@ -4,18 +4,24 @@ import 'package:apk/firebase/studentFunctios.dart';
 import 'package:apk/functions/classes.dart';
 import 'package:apk/functions/paymentInFunction.dart';
 import 'package:apk/functions/student.dart';
-import 'package:apk/screen/UIBuilding/dayList.dart';
 import 'package:apk/screen/UIBuilding/viewAllStudent.dart';
 import 'package:apk/screen/adminPanel.dart';
 import 'package:apk/screen/popUpWindows/addDay.dart';
 import 'package:apk/screen/popUpWindows/alertMsg.dart';
 import 'package:apk/screen/popUpWindows/allStudent.dart';
+import 'package:apk/screen/popUpWindows/qrScanner.dart';
 import 'package:flutter/material.dart';
 
 class Classdashboard extends StatefulWidget {
   final aClass object;
   final aMonth month;
-  const Classdashboard({super.key, required this.object, required this.month});
+  final String year;
+  const Classdashboard({
+    super.key,
+    required this.object,
+    required this.month,
+    required this.year,
+  });
   @override
   State<Classdashboard> createState() => _ClassdashboardState();
 }
@@ -23,6 +29,7 @@ class Classdashboard extends StatefulWidget {
 class _ClassdashboardState extends State<Classdashboard> {
   // ignore: annotate_overrides
   void initState() {
+    commonYear = widget.year;
     super.initState();
   }
 
@@ -66,18 +73,13 @@ class _ClassdashboardState extends State<Classdashboard> {
                       alignment: Alignment.center,
                       //height: MediaQuery.of(context).size.height * 0.1,
                       width: MediaQuery.of(context).size.width * 0.3,
-                      child: IconButton(
-                        icon: Icon(
-                          Icons.class_,
-                          color: AppColors.color4,
-                          size: MediaQuery.of(context).size.width * 0.15,
-                        ),
-                        onPressed: () {
-                          print('Download document');
-                          // Add download functionality here
-                        },
+                      child: Icon(
+                        Icons.class_,
+                        color: AppColors.color4,
+                        size: MediaQuery.of(context).size.width * 0.15,
                       ),
                     ),
+
                     SizedBox(width: MediaQuery.of(context).size.width * 0.01),
                     Container(
                       alignment: Alignment.centerLeft,
@@ -144,6 +146,7 @@ class _ClassdashboardState extends State<Classdashboard> {
               children: [
                 GestureDetector(
                   onTap: () async {
+                    showPending(context);
                     await getAllStudent(context);
                     await buildStudentListOnViewStudent(
                       context,
@@ -152,9 +155,13 @@ class _ClassdashboardState extends State<Classdashboard> {
                       false,
                       false,
                       0,
-                      nullMonthObject(),
+                      widget.month,
                       0,
+                      true,
+                      false,
+                      commonYear,
                     );
+                    Navigator.pop(context);
                     await showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -166,17 +173,26 @@ class _ClassdashboardState extends State<Classdashboard> {
                     );
                   },
                   child: Container(
+                    padding: EdgeInsets.all(5),
                     height: MediaQuery.of(context).size.width * 0.1,
-                    width: MediaQuery.of(context).size.width * 0.14,
+                    //width: MediaQuery.of(context).size.width * 0.14,
                     decoration: BoxDecoration(
                       color: AppColors.color2,
                       borderRadius: BorderRadius.circular(
                         8,
                       ), // Add radius instead of circle
                     ),
-                    child: Icon(
-                      Icons.group,
-                      color: Colors.white,
+                    child: Row(
+                      children: [
+                        Icon(Icons.group, color: Colors.white),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.02,
+                        ),
+                        Text(
+                          "${widget.object.students.length}",
+                          style: fontStyle.font3,
+                        ),
+                      ],
                     ), // Changed icon to person
                   ),
                 ),
@@ -191,8 +207,11 @@ class _ClassdashboardState extends State<Classdashboard> {
                       true,
                       false,
                       0,
-                      nullMonthObject(),
+                      widget.month,
                       0,
+                      false,
+                      false,
+                      commonYear,
                     );
                     await showDialog(
                       context: context,
@@ -211,6 +230,37 @@ class _ClassdashboardState extends State<Classdashboard> {
                     decoration: BoxDecoration(
                       color: AppColors.color6,
                       shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+                SizedBox(width: MediaQuery.of(context).size.width * 0.02),
+                GestureDetector(
+                  onTap: () async {
+                    await showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return QRScannerPage(
+                          classObject: widget.object,
+                          indexOfDay: 0,
+                          month: nullMonthObject(),
+                          monthIndex: 0,
+                          purpose: 1,
+                          year: "${DateTime.now().year}",
+                        ); // Call your StatefulWidget
+                      },
+                    );
+                  },
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * 0.05,
+                    width: MediaQuery.of(context).size.width * 0.1,
+                    decoration: BoxDecoration(
+                      color: AppColors.color6,
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                    ),
+                    child: Icon(
+                      Icons.qr_code_scanner,
+                      color: Colors.white,
+                      size: MediaQuery.of(context).size.height * 0.03,
                     ),
                   ),
                 ),
@@ -233,7 +283,21 @@ class _ClassdashboardState extends State<Classdashboard> {
                       SizedBox(width: MediaQuery.of(context).size.width * 0.01),
                       GestureDetector(
                         onTap: () async {
-                          //viewAllStudentController(context);
+                          showPending(context);
+                          commonYear = await yearShiftController(
+                            context,
+                            widget.object.ID,
+                            commonYear,
+                            false,
+                          );
+                          Navigator.pop(context);
+
+                          navigateToClassDashboard(
+                            context,
+                            widget.object,
+                            commonYear,
+                            getMonthIntFromName(widget.month.name),
+                          );
                         },
                         child: Container(
                           height: MediaQuery.of(context).size.width * 0.1,
@@ -246,10 +310,25 @@ class _ClassdashboardState extends State<Classdashboard> {
                         ),
                       ),
                       SizedBox(width: MediaQuery.of(context).size.width * 0.03),
-                      Text("2025", style: fontStyle.font2),
+                      Text("$commonYear", style: fontStyle.font2),
                       SizedBox(width: MediaQuery.of(context).size.width * 0.03),
                       GestureDetector(
                         onTap: () async {
+                          showPending(context);
+                          commonYear = await yearShiftController(
+                            context,
+                            widget.object.ID,
+                            commonYear,
+                            true,
+                          );
+                          Navigator.pop(context);
+                          navigateToClassDashboard(
+                            context,
+                            widget.object,
+                            commonYear,
+                            getMonthIntFromName(widget.month.name),
+                          );
+
                           //viewAllStudentController(context);
                         },
                         child: Container(
@@ -272,46 +351,14 @@ class _ClassdashboardState extends State<Classdashboard> {
                       GestureDetector(
                         onTap: () async {
                           showPending(context);
-                          List<aMonth>? payment = await getPaymentController(
-                            context,
-                            "2025",
-                            widget.object.ID,
-                          );
-                          if (payment != null && payment.isNotEmpty) {
-                            await buildDayList(
-                              context,
-                              0,
-                              payment[nextBackController(
-                                    getMonthIntFromName(widget.month.name),
-                                    false,
-                                  ) -
-                                  1],
-                              widget.object,
-                              payment[nextBackController(
-                                        getMonthIntFromName(widget.month.name),
-                                        false,
-                                      ) -
-                                      1]
-                                  .attendance,
-                            );
-                          }
 
-                          Navigator.push(
+                          navigateToClassDashboard(
                             context,
-                            MaterialPageRoute(
-                              builder:
-                                  (context) => Classdashboard(
-                                    object: widget.object,
-                                    month:
-                                        payment?[nextBackController(
-                                              getMonthIntFromName(
-                                                widget.month.name,
-                                              ),
-                                              false,
-                                            ) -
-                                            1] ??
-                                        nullMonthObject(),
-                                  ),
+                            widget.object,
+                            commonYear,
+                            nextBackController(
+                              getMonthIntFromName(widget.month.name),
+                              false,
                             ),
                           );
                         },
@@ -331,46 +378,13 @@ class _ClassdashboardState extends State<Classdashboard> {
                       GestureDetector(
                         onTap: () async {
                           showPending(context);
-                          List<aMonth>? payment = await getPaymentController(
+                          navigateToClassDashboard(
                             context,
-                            "2025",
-                            widget.object.ID,
-                          );
-                          if (payment != null && payment.isNotEmpty) {
-                            await buildDayList(
-                              context,
-                              0,
-                              payment[nextBackController(
-                                    getMonthIntFromName(widget.month.name),
-                                    true,
-                                  ) -
-                                  1],
-                              widget.object,
-                              payment[nextBackController(
-                                        getMonthIntFromName(widget.month.name),
-                                        true,
-                                      ) -
-                                      1]
-                                  .attendance,
-                            );
-                          }
-
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder:
-                                  (context) => Classdashboard(
-                                    object: widget.object,
-                                    month:
-                                        payment?[nextBackController(
-                                              getMonthIntFromName(
-                                                widget.month.name,
-                                              ),
-                                              true,
-                                            ) -
-                                            1] ??
-                                        nullMonthObject(),
-                                  ),
+                            widget.object,
+                            commonYear,
+                            nextBackController(
+                              getMonthIntFromName(widget.month.name),
+                              true,
                             ),
                           );
                         },
