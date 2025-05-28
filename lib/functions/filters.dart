@@ -11,3 +11,15 @@ List<aPayment> filterPaymentAccordingToDay(
     return date.day == day;
   }).toList();
 }
+
+List<aClass> filterClassByGrade(List<aClass> allClasses, String grade) {
+  return allClasses.where((classItem) {
+    return classItem.grade == grade;
+  }).toList();
+}
+
+List<aClass> filterClassByType(List<aClass> allClasses, String type) {
+  return allClasses.where((classItem) {
+    return classItem.otherInfo == type;
+  }).toList();
+}

@@ -3,6 +3,7 @@ import 'package:apk/commonWidget/font&color.dart';
 import 'package:apk/firebase/classFunction.dart';
 import 'package:apk/firebase/appInfo.dart';
 import 'package:apk/functions/classes.dart';
+import 'package:apk/functions/filters.dart';
 import 'package:apk/screen/UIBuilding/classList.dart';
 import 'package:apk/screen/adminPanel.dart';
 import 'package:apk/screen/popUpWindows/alertMsg.dart';
@@ -84,9 +85,10 @@ class _welcomePageState extends State<welcomePage> {
                 print('Tap on Logging');
                 showPending(context);
                 await getAllClass(context);
+                buildGradeListOfClasses(context, allClass, "0");
                 await buildClassList(
                   context,
-                  allClass,
+                  filterClassByType(allClass, "Monthly"),
                   DateTime.now().year.toString(),
                 );
                 bool isValid = await cheackAdminPassword(

@@ -52,7 +52,10 @@ GestureDetector listCardOnViewStudent(
       height: MediaQuery.of(context).size.height * 0.05,
       width: MediaQuery.of(context).size.width * 0.8,
       decoration: BoxDecoration(
-        color: AppColors.color3, // Set the background color of the container
+        color:
+            student.state == "Online"
+                ? const Color.fromARGB(255, 158, 160, 3)
+                : AppColors.color3, // Set the background color of the container
         borderRadius: BorderRadius.circular(10.0), // Set the corner radius
       ),
       child: Row(

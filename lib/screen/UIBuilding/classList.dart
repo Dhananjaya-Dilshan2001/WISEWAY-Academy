@@ -1,11 +1,15 @@
 import 'package:apk/commonWidget/font&color.dart';
 import 'package:apk/dataModel/model.dart';
 import 'package:apk/functions/classes.dart';
+import 'package:apk/functions/filters.dart';
 import 'package:apk/functions/paymentInFunction.dart';
+import 'package:apk/screen/adminPanel.dart';
 import 'package:apk/screen/collectPayment.dart';
 import 'package:apk/screen/popUpWindows/addANewClass.dart';
 import 'package:apk/screen/popUpWindows/alertMsg.dart';
 import 'package:flutter/material.dart';
+
+List<Widget> gradeListOfClasses = [];
 
 GestureDetector listCardOnClassList(
   BuildContext context,
@@ -305,6 +309,56 @@ Future<void> buildClassListOnStudent(
       i == selectedCard ? AppColors.color3 : AppColors.color3.withOpacity(0.4),
       studentID,
       i,
+    );
+  }
+}
+
+void buildGradeListOfClasses(
+  BuildContext context,
+  List<aClass> classes,
+  String selectedGrade,
+) {
+  gradeListOfClasses = [];
+  List<String> grades = classes.map((c) => c.grade).toSet().toList();
+  int l = grades.length;
+  print("Lenth of array in Build Grade List Is $grades");
+
+  for (int i = 0; i < l; i++) {
+    gradeListOfClasses.add(SizedBox(width: 2));
+    gradeListOfClasses.add(
+      GestureDetector(
+        onTap: () async {
+          {
+            tapMonthly = AppColors.color6;
+            tapAllClass = AppColors.color2;
+            tapSpecial = AppColors.color2;
+            buildGradeListOfClasses(context, classes, grades[i]);
+            buildClassList(
+              context,
+              filterClassByGrade(classes, grades[i]),
+              DateTime.now().year.toString(),
+            );
+            (context as Element).markNeedsBuild();
+          }
+        },
+        child: Container(
+          height: 30,
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+          child: Center(
+            child: Text(
+              "${grades[i].length == 1 ? "0${grades[i]}" : grades[i]}",
+              style: fontStyle.font5,
+            ),
+          ),
+          decoration: BoxDecoration(
+            color:
+                selectedGrade == grades[i]
+                    ? AppColors.color6
+                    : AppColors.color2,
+            borderRadius: BorderRadius.circular(5.0),
+          ),
+        ),
+      ),
     );
   }
 }

@@ -27,10 +27,24 @@ class _addANewClassState extends State<addANewClass> {
   Color tapEdexcel = AppColors.color2;
   Color tapOnline = AppColors.color2;
   Color tapPhysical = AppColors.color6;
+  Color tapMonthly = AppColors.color6;
+  Color tapSpecial = AppColors.color2;
 
   @override
   void initState() {
     super.initState();
+    if (widget.object.otherInfo.isEmpty) {
+      widget.object.otherInfo = "Monthly";
+      tapMonthly = AppColors.color6;
+      tapSpecial = AppColors.color2;
+    }
+    if (widget.object.otherInfo == "Special") {
+      tapMonthly = AppColors.color2;
+      tapSpecial = AppColors.color6;
+    } else {
+      tapMonthly = AppColors.color6;
+      tapSpecial = AppColors.color2;
+    }
     if (widget.object.curriculm.isEmpty) {
       widget.object.curriculm = "Cambridge";
     }
@@ -243,6 +257,63 @@ class _addANewClassState extends State<addANewClass> {
                     onChanged: (value) {
                       widget.object.whatsappNo = value;
                     },
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+            Row(
+              children: [
+                Container(
+                  height: 25,
+                  width: MediaQuery.of(context).size.width * 0.2,
+                  //color: AppColors.color5,
+                  child: Text("Class Type", style: fontStyle.font4),
+                ),
+                Container(
+                  height: 25,
+                  child: Text(":   ", style: fontStyle.font4),
+                ),
+                //SizedBox(width: 5,),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      tapMonthly = AppColors.color6;
+                      tapSpecial = AppColors.color2;
+                      widget.object.otherInfo = "Monthly";
+                    });
+                  },
+                  child: Container(
+                    height: 30,
+                    width: MediaQuery.of(context).size.width * 0.2,
+                    child: Center(
+                      child: Text("Monthly", style: fontStyle.font4),
+                    ),
+                    decoration: BoxDecoration(
+                      color: tapMonthly,
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                  ),
+                ),
+                SizedBox(width: MediaQuery.of(context).size.width * 0.02),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      tapMonthly = AppColors.color2;
+                      tapSpecial = AppColors.color6;
+                      widget.object.otherInfo = "Special";
+                    });
+                  },
+                  child: Container(
+                    height: 30,
+                    width: MediaQuery.of(context).size.width * 0.2,
+                    child: Center(
+                      child: Text("Special", style: fontStyle.font4),
+                    ),
+                    decoration: BoxDecoration(
+                      color: tapSpecial,
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
                   ),
                 ),
               ],

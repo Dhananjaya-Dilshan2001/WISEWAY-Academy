@@ -2,6 +2,7 @@ import 'package:apk/commonWidget/font&color.dart';
 import 'package:apk/screen/popUpWindows/alertMsg.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 String appVersion = "1.0";
 String ownerMsgTitle = "";
@@ -123,5 +124,52 @@ Future<bool> cheackAdminPassword(BuildContext context, String password) async {
       () => Navigator.of(context).pop(),
     );
     return false;
+  }
+}
+
+void updateAdminPassword(BuildContext context, String newPassword) async {
+  try {
+    await FirebaseFirestore.instance
+        .collection('AppInfo')
+        .doc('AppInfo')
+        .update({'adminPassword': newPassword});
+
+    snackBarMsg(
+      context,
+      AppColors.color5,
+      "Your password has been changed successfully.",
+      Icons.check,
+    );
+  } catch (e) {
+    print('Error updating password: $e');
+    snackBarMsg(
+      context,
+      AppColors.color6,
+      "Failed to change password. Please try again. $e",
+      Icons.error,
+    );
+  }
+}
+
+void changeAdminPasswordController(
+  BuildContext context,
+  String oldPassword,
+  String newPassword,
+) async {
+  showPending(context);
+  if (await cheackAdminPassword(context, oldPassword)) {
+    Navigator.of(context).pop();
+    Navigator.of(context).pop();
+    updateAdminPassword(context, newPassword);
+  } else {
+    print("Old Password is not matched");
+    Navigator.of(context).pop();
+    Navigator.of(context).pop();
+    snackBarMsg(
+      context,
+      Colors.red,
+      "Old Password is not matched.",
+      Icons.error,
+    );
   }
 }

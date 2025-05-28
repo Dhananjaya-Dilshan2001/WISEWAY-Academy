@@ -22,8 +22,8 @@ class _StudentListState extends State<StudentList> {
     tapCambridge = AppColors.color1;
     tapEdexcel = AppColors.color1;
     tapAllGrade = AppColors.color6;
-
     buildGradeList(context, allStudent, "0");
+    tapGrade = "0";
     super.initState();
     setState(() {
       print("Trigger student List UI..!");
@@ -77,6 +77,9 @@ class _StudentListState extends State<StudentList> {
                                       ? tapCambridge = AppColors.color1
                                       : tapCambridge = AppColors.color6;
                                   tapEdexcel = AppColors.color1;
+                                  print(
+                                    "Tap On Cambridge grade is : $tapGrade",
+                                  );
                                   buildStudentList(
                                     context,
                                     sortStudentList(
@@ -110,6 +113,7 @@ class _StudentListState extends State<StudentList> {
                                       ? tapEdexcel = AppColors.color1
                                       : tapEdexcel = AppColors.color6;
                                   tapCambridge = AppColors.color1;
+                                  print("Tap On Edexcel grade is : $tapGrade");
                                   buildStudentList(
                                     context,
                                     sortStudentList(

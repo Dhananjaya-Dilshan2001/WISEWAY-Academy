@@ -3,6 +3,7 @@ import 'package:apk/dataModel/model.dart';
 import 'package:apk/firebase/classFunction.dart';
 import 'package:apk/firebase/payment.dart';
 import 'package:apk/firebase/studentFunctios.dart';
+import 'package:apk/functions/filters.dart';
 import 'package:apk/functions/paymentInFunction.dart';
 import 'package:apk/screen/UIBuilding/classList.dart';
 import 'package:apk/screen/UIBuilding/dayList.dart';
@@ -49,7 +50,11 @@ Future<void> addClassController(BuildContext context, aClass object) async {
   );
   print("Class registered successfully.");
   await getAllClass(context);
-  await buildClassList(context, allClass, "${DateTime.now().year}");
+  await buildClassList(
+    context,
+    filterClassByType(allClass, "Monthly"),
+    "${DateTime.now().year}",
+  );
   Navigator.push(
     context,
     MaterialPageRoute(builder: (context) => adminPanel()),
@@ -195,7 +200,11 @@ void updateClassController(BuildContext context, aClass object) async {
 
   print("Class updated successfully.");
   await getAllClass(context);
-  await buildClassList(context, allClass, "${DateTime.now().year}");
+  await buildClassList(
+    context,
+    filterClassByType(allClass, "Monthly"),
+    "${DateTime.now().year}",
+  );
   Navigator.pop(context);
   Navigator.push(
     context,

@@ -5,8 +5,10 @@ import 'package:apk/dataModel/model.dart';
 import 'package:apk/firebase/classFunction.dart';
 import 'package:apk/firebase/studentFunctios.dart';
 import 'package:apk/functions/classes.dart';
+import 'package:apk/functions/filters.dart';
 import 'package:apk/functions/sorting.dart';
 import 'package:apk/functions/student.dart';
+import 'package:apk/screen/UIBuilding/classList.dart';
 import 'package:apk/screen/UIBuilding/classListInPaymenteport.dart';
 import 'package:apk/screen/UIBuilding/studentList.dart';
 import 'package:apk/screen/appSetting.dart';
@@ -18,6 +20,10 @@ import 'package:apk/screen/popUpWindows/searchStudent.dart';
 import 'package:apk/screen/popUpWindows/viewDailyReport.dart';
 import 'package:apk/screen/studentList.dart';
 import 'package:flutter/material.dart';
+
+Color tapSpecial = AppColors.color2;
+Color tapMonthly = AppColors.color6;
+Color tapAllClass = AppColors.color6;
 
 class adminPanel extends StatefulWidget {
   const adminPanel({super.key});
@@ -64,17 +70,17 @@ class _adminPanelState extends State<adminPanel>
       body: Center(
         child: Column(
           children: [
-            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.02),
             Container(
-              height: MediaQuery.of(context).size.height * 0.1,
+              height: MediaQuery.of(context).size.height * 0.06,
               width: MediaQuery.of(context).size.width * 0.95,
               //color: AppColors.color6,
               child: Row(
                 children: [
                   SizedBox(width: MediaQuery.of(context).size.width * 0.05),
                   commonButton.button2(
-                    MediaQuery.of(context).size.height * 0.06,
-                    MediaQuery.of(context).size.width * 0.4,
+                    MediaQuery.of(context).size.height * 0.05,
+                    MediaQuery.of(context).size.width * 0.3,
                     "Register",
                     AppColors.color6,
                     () async {
@@ -97,10 +103,10 @@ class _adminPanelState extends State<adminPanel>
                     AppColors.color4,
                     Icons.person_add,
                   ),
-                  SizedBox(width: MediaQuery.of(context).size.width * 0.05),
+                  SizedBox(width: MediaQuery.of(context).size.width * 0.25),
                   commonButton.button2(
-                    MediaQuery.of(context).size.height * 0.06,
-                    MediaQuery.of(context).size.width * 0.4,
+                    MediaQuery.of(context).size.height * 0.05,
+                    MediaQuery.of(context).size.width * 0.3,
                     "New Class",
                     AppColors.color6,
                     () async {
@@ -151,6 +157,8 @@ class _adminPanelState extends State<adminPanel>
                       print('Tap View All Students');
                       showPending(context);
                       await getAllStudent(context);
+                      tapCambridge = AppColors.color1;
+                      tapEdexcel = AppColors.color1;
                       await buildStudentList(
                         context,
                         sortStudentList(context, allStudent, "0"),
@@ -251,14 +259,131 @@ class _adminPanelState extends State<adminPanel>
                 ],
               ),
             ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
             Text("Classes", style: fontStyle.font3),
             Container(
               height: 1,
               width: MediaQuery.of(context).size.width * 0.9,
               color: AppColors.color4,
             ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+
+            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+            Container(
+              height: MediaQuery.of(context).size.height * 0.04,
+              width: MediaQuery.of(context).size.width * 0.9,
+              //color: AppColors.color5,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    height: MediaQuery.of(context).size.height * 0.04,
+                    width: MediaQuery.of(context).size.width * 0.4,
+                    //color: AppColors.color2,
+                    child: Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () async {
+                            await buildClassList(
+                              context,
+                              filterClassByType(allClass, "Monthly"),
+                              DateTime.now().year.toString(),
+                            );
+                            setState(() {
+                              tapAllClass = AppColors.color6;
+                              tapMonthly = AppColors.color6;
+                              tapSpecial = AppColors.color2;
+                              buildGradeListOfClasses(context, allClass, "0");
+                            });
+                          },
+                          child: Container(
+                            height: 30,
+                            width: MediaQuery.of(context).size.width * 0.17,
+                            child: Center(
+                              child: Text("Monthly", style: fontStyle.font5),
+                            ),
+                            decoration: BoxDecoration(
+                              color: tapMonthly,
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 3),
+                        GestureDetector(
+                          onTap: () async {
+                            await buildClassList(
+                              context,
+                              filterClassByType(allClass, "Special"),
+                              DateTime.now().year.toString(),
+                            );
+                            setState(() {
+                              tapAllClass = AppColors.color6;
+                              tapSpecial = AppColors.color6;
+                              tapMonthly = AppColors.color2;
+                              buildGradeListOfClasses(context, allClass, "0");
+                            });
+                          },
+                          child: Container(
+                            height: 30,
+                            width: MediaQuery.of(context).size.width * 0.17,
+                            child: Center(
+                              child: Text("Special", style: fontStyle.font5),
+                            ),
+                            decoration: BoxDecoration(
+                              color: tapSpecial,
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(width: MediaQuery.of(context).size.width * 0.05),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    height: MediaQuery.of(context).size.height * 0.04,
+                    width: MediaQuery.of(context).size.width * 0.45,
+                    //color: AppColors.color2,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () async {
+                              setState(() {
+                                tapAllClass = AppColors.color6;
+                                buildGradeListOfClasses(context, allClass, "0");
+                                buildClassList(
+                                  context,
+                                  allClass,
+                                  DateTime.now().year.toString(),
+                                );
+                              });
+                            },
+                            child: Container(
+                              height: 30,
+                              width: MediaQuery.of(context).size.width * 0.1,
+                              child: Center(
+                                child: Text("All", style: fontStyle.font5),
+                              ),
+                              decoration: BoxDecoration(
+                                color: tapAllClass,
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.01,
+                          ),
+                          ...gradeListOfClasses,
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.005),
             Container(
               height: MediaQuery.of(context).size.height * 0.5,
               width: MediaQuery.of(context).size.width * 0.9,

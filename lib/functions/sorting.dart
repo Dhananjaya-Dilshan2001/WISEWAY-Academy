@@ -32,6 +32,9 @@ List<aStudent> sortStudentList(
 }
 
 List<aStudent> filterStudentsByGrade(List<aStudent> students, String grade) {
+  if (grade == "0") {
+    return students;
+  }
   return students.where((student) => student.grade == "$grade").toList();
 }
 
