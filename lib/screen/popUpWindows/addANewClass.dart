@@ -29,10 +29,20 @@ class _addANewClassState extends State<addANewClass> {
   Color tapPhysical = AppColors.color6;
   Color tapMonthly = AppColors.color6;
   Color tapSpecial = AppColors.color2;
+  String dayName = "";
+  String classTime = "";
 
   @override
   void initState() {
     super.initState();
+    if (widget.object.note.isEmpty) {
+      dayName = "Enter day name ex: Monday";
+      classTime = "Enter class time ex: 10:00AM - 11:00AM";
+    } else {
+      dayName = widget.object.note.split("   ")[0];
+      classTime = widget.object.note.split("   ")[1];
+    }
+
     if (widget.object.otherInfo.isEmpty) {
       widget.object.otherInfo = "Monthly";
       tapMonthly = AppColors.color6;
@@ -66,6 +76,12 @@ class _addANewClassState extends State<addANewClass> {
       tapOnline = AppColors.color6;
     }
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    print("Calling dispose in addANewClass");
   }
 
   @override
@@ -198,7 +214,7 @@ class _addANewClassState extends State<addANewClass> {
                   height: 25,
                   width: MediaQuery.of(context).size.width * 0.15,
                   //color: AppColors.color5,
-                  child: Text("Note", style: fontStyle.font4),
+                  child: Text("Day", style: fontStyle.font4),
                 ),
                 Container(
                   height: 25,
@@ -212,7 +228,7 @@ class _addANewClassState extends State<addANewClass> {
                       style: fontStyle.font4,
                       decoration: InputDecoration(
                         hintText:
-                            "${widget.object.note.isEmpty ? "Day time" : widget.object.note}",
+                            "${widget.object.note.isEmpty ? "Enter Day ex : Monday" : dayName}",
                         hintStyle: TextStyle(color: AppColors.color4),
                         contentPadding: EdgeInsets.symmetric(horizontal: 10),
                         border: OutlineInputBorder(),
@@ -220,7 +236,43 @@ class _addANewClassState extends State<addANewClass> {
                       maxLines: null,
                       keyboardType: TextInputType.multiline,
                       onChanged: (value) {
-                        widget.object.note = value;
+                        dayName = value;
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+            Row(
+              children: [
+                Container(
+                  height: 25,
+                  width: MediaQuery.of(context).size.width * 0.15,
+                  //color: AppColors.color5,
+                  child: Text("Time", style: fontStyle.font4),
+                ),
+                Container(
+                  height: 25,
+                  child: Text(":   ", style: fontStyle.font4),
+                ),
+                //SizedBox(width: 5,),
+                Expanded(
+                  child: Container(
+                    height: 30,
+                    child: TextField(
+                      style: fontStyle.font4,
+                      decoration: InputDecoration(
+                        hintText:
+                            "${widget.object.note.isEmpty ? "Enter Time ex: 10:00AM - 11:00AM" : classTime}",
+                        hintStyle: TextStyle(color: AppColors.color4),
+                        contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                        border: OutlineInputBorder(),
+                      ),
+                      maxLines: null,
+                      keyboardType: TextInputType.multiline,
+                      onChanged: (value) {
+                        classTime = value;
                       },
                     ),
                   ),
@@ -514,6 +566,7 @@ class _addANewClassState extends State<addANewClass> {
                   () async {
                     if (widget.isRegister) {
                       print('Tap on Register');
+                      widget.object.note = "$dayName   $classTime";
                       if (isClassObjectNull(widget.object)) {
                         popUpMsg(
                           context,

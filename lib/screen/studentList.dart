@@ -154,6 +154,7 @@ class _StudentListState extends State<StudentList> {
                         Text("Grade", style: fontStyle.font2),
                         GestureDetector(
                           onTap: () async {
+                            tapGrade = "0";
                             await buildStudentList(
                               context,
                               sortStudentList(context, allStudent, "0"),

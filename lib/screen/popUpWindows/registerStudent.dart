@@ -31,6 +31,7 @@ class _registerStudentState extends State<registerStudent> {
   Color tapPhysical = AppColors.color6;
 
   String title = "";
+  String OLYear = "";
 
   @override
   void initState() {
@@ -62,6 +63,9 @@ class _registerStudentState extends State<registerStudent> {
       widget.student.gender = "Male";
       widget.student.curriculm = "Cambridge";
       widget.student.state = "Physical";
+      OLYear = "";
+    } else {
+      OLYear = "20${widget.student.ID.substring(1, 3)}";
     }
 
     super.initState();
@@ -157,6 +161,45 @@ class _registerStudentState extends State<registerStudent> {
                         widget.student.school = value;
                       },
                     ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+            Row(
+              children: [
+                Container(
+                  height: 40,
+                  width: MediaQuery.of(context).size.width * 0.15,
+                  //color: AppColors.color5,
+                  child: Text("O/L Year", style: fontStyle.font4),
+                ),
+                Container(
+                  height: 40,
+                  child: Text(":   ", style: fontStyle.font4),
+                ),
+                //SizedBox(width: 5,),
+                Container(
+                  height: 40,
+                  width: MediaQuery.of(context).size.width * 0.4,
+                  //color: AppColors.color6,
+                  child: TextField(
+                    style: fontStyle.font4,
+                    decoration: InputDecoration(
+                      hintText: OLYear.isEmpty ? "ex : 2028" : OLYear,
+                      hintStyle: fontStyle.font4.copyWith(
+                        color: AppColors.color4,
+                      ),
+                      counterStyle: TextStyle(
+                        color:
+                            AppColors
+                                .color4, // Change the color of the max length counter
+                      ),
+                    ),
+                    maxLength: 4, // Limits input to 2 characters
+                    onChanged: (value) {
+                      OLYear = value;
+                    },
                   ),
                 ),
               ],
@@ -522,32 +565,34 @@ class _registerStudentState extends State<registerStudent> {
             SizedBox(height: MediaQuery.of(context).size.height * 0.005),
             GestureDetector(
               onTap: () async {
+                if (widget.student.ID.isEmpty) {
+                  widget.student.ID = await genarateStudentID(
+                    context,
+                    widget.student,
+                    OLYear,
+                  );
+                } else {
+                  snackBarMsg(
+                    context,
+                    AppColors.color6,
+                    "Student ID already generated",
+                    Icons.error,
+                  );
+                }
                 setState(() {
-                  if (widget.student.ID.isEmpty) {
-                    widget.student.ID = genarateStudentID(
-                      context,
-                      widget.student,
-                    );
-                  } else {
-                    snackBarMsg(
-                      context,
-                      AppColors.color6,
-                      "Student ID already generated",
-                      Icons.error,
-                    );
-                  }
+                  widget.student.ID = widget.student.ID;
                 });
               },
               child: Container(
                 height: MediaQuery.of(context).size.height * 0.07,
-                width: MediaQuery.of(context).size.width * 0.3,
+                //width: MediaQuery.of(context).size.width * 0.3,
                 //color: AppColors.color5,
                 child: Column(
                   children: [
                     Text("Student ID", style: fontStyle.font2),
                     Container(
                       height: 30,
-                      width: MediaQuery.of(context).size.width * 0.4,
+                      //width: MediaQuery.of(context).size.width * 0.4,
                       child: Center(
                         child: Text(
                           "${widget.student.ID.isEmpty ? "Tap to generate" : widget.student.ID}",
@@ -584,6 +629,7 @@ class _registerStudentState extends State<registerStudent> {
                   AppColors.color6,
                   () async {
                     if (widget.isRegister) {
+                      print("Student details: ${widget.student.toMap()}");
                       if (isStudentObjectNull(widget.student)) {
                         popUpMsg(
                           context,

@@ -34,6 +34,12 @@ Future<void> generatePaperBudgetPDF(
     0,
     (sum, payment) => sum + payment.value,
   );
+  int cashPayment = dailyPayment
+      .where((payment) => payment.method == 'Cash')
+      .fold(0, (sum, payment) => sum + payment.value);
+  int onlinePayment = dailyPayment
+      .where((payment) => payment.method == 'Online')
+      .fold(0, (sum, payment) => sum + payment.value);
 
   final ByteData bytes = await rootBundle.load('Image/wiseway logo.png');
   final Uint8List logoBytes = bytes.buffer.asUint8List();
@@ -92,7 +98,7 @@ Future<void> generatePaperBudgetPDF(
                 border: pw.TableBorder.all(),
                 cellAlignment: pw.Alignment.centerLeft,
                 headerStyle: pw.TextStyle(
-                  fontSize: 14,
+                  fontSize: 12,
                   fontWeight: pw.FontWeight.bold,
                 ),
                 headers: [
@@ -101,6 +107,7 @@ Future<void> generatePaperBudgetPDF(
                   'Grade',
                   'Subject',
                   'Reason',
+                  'Method',
                   'Payment Value',
                 ],
                 data:
@@ -119,11 +126,29 @@ Future<void> generatePaperBudgetPDF(
                           'subject',
                         ),
                         "${payment.reason} - ${payment.month}",
+                        '${payment.method}',
                         "${payment.value} /=",
                       ];
                     }).toList(),
               ),
               pw.SizedBox(height: 20),
+
+              pw.Text(
+                "Cash Income : $cashPayment/=",
+                style: pw.TextStyle(
+                  fontSize: 14,
+                  fontWeight: pw.FontWeight.bold,
+                ),
+              ),
+              pw.SizedBox(height: 10),
+              pw.Text(
+                "Online Income : $onlinePayment/=",
+                style: pw.TextStyle(
+                  fontSize: 14,
+                  fontWeight: pw.FontWeight.bold,
+                ),
+              ),
+              pw.SizedBox(height: 10),
               pw.Text(
                 "Total Income : $totalPayment/=",
                 style: pw.TextStyle(

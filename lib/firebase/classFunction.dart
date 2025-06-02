@@ -1,6 +1,7 @@
 import 'package:apk/commonWidget/font&color.dart';
 import 'package:apk/dataModel/model.dart';
 import 'package:apk/functions/classes.dart';
+import 'package:apk/functions/student.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -94,7 +95,10 @@ Future<void> updateClass(BuildContext context, aClass object) async {
                 children: [
                   Icon(Icons.check, color: AppColors.color4),
                   SizedBox(width: 10),
-                  Text("Class updated successfully..!", style: fontStyle.font3),
+                  Text(
+                    "Class Details updated successfully..!",
+                    style: fontStyle.font3,
+                  ),
                 ],
               ),
               duration: Duration(seconds: 4),
@@ -159,6 +163,7 @@ Future<void> updateClass(BuildContext context, aClass object) async {
 
 Future<void> deleteClass(BuildContext context, aClass object) async {
   try {
+    removeClassWhenClassDeleted(context, object.ID);
     DocumentReference documentRef = _firestore
         .collection('WISEWAY Academy')
         .doc("class");

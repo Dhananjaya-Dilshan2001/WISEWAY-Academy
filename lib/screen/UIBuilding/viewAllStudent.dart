@@ -2,6 +2,7 @@ import 'package:apk/commonWidget/font&color.dart';
 import 'package:apk/dataModel/model.dart';
 import 'package:apk/functions/classes.dart';
 import 'package:apk/functions/student.dart';
+import 'package:apk/screen/popUpWindows/alertMsg.dart';
 import 'package:apk/screen/popUpWindows/updateStudent.dart';
 import 'package:flutter/material.dart';
 
@@ -103,11 +104,21 @@ GestureDetector listCardOnViewStudent(
             visible: removeButton,
             child: GestureDetector(
               onTap: () {
-                removeStudentFromClassController(
+                popUpMsg(
                   context,
-                  object,
-                  student,
-                  year,
+                  AppColors.color3,
+                  "Remove Student",
+                  "Are you sure you want to remove ${student.name} from this class?",
+                  () {
+                    Navigator.pop(context);
+                    // Call the function to remove the student from the class
+                    removeStudentFromClassController(
+                      context,
+                      object,
+                      student,
+                      year,
+                    );
+                  },
                 );
               },
               child: Icon(Icons.remove_circle_outline, color: AppColors.color4),
@@ -117,13 +128,23 @@ GestureDetector listCardOnViewStudent(
             visible: removeButton2,
             child: GestureDetector(
               onTap: () {
-                removeAttendance(
+                popUpMsg(
                   context,
-                  object,
-                  student.ID,
-                  month,
-                  indexOfDay,
-                  year,
+                  AppColors.color3,
+                  "Remove Attendance",
+                  "Are you sure you want to remove attendance for ${student.name} on ${month.name}?",
+                  () {
+                    Navigator.pop(context);
+                    // Call the function to remove attendance
+                    removeAttendance(
+                      context,
+                      object,
+                      student.ID,
+                      month,
+                      indexOfDay,
+                      year,
+                    );
+                  },
                 );
               },
               child: Icon(Icons.remove_circle_outline, color: AppColors.color4),

@@ -187,10 +187,7 @@ Future<void> updatePayment(
                 children: [
                   Icon(Icons.check, color: AppColors.color4),
                   SizedBox(width: 10),
-                  Text(
-                    "Payment Month Details updated successfully!",
-                    style: fontStyle.font3,
-                  ),
+                  Text("Details updated successfully!", style: fontStyle.font3),
                 ],
               ),
               duration: Duration(seconds: 4),

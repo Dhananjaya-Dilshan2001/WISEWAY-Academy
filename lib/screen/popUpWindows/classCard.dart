@@ -1,5 +1,6 @@
 import 'package:apk/commonWidget/font&color.dart';
 import 'package:apk/dataModel/model.dart';
+import 'package:apk/functions/qrcode.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -22,15 +23,32 @@ Future<void> viewCard(BuildContext context, aStudent student) async {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Container(
-                width: MediaQuery.of(context).size.width * 0.3,
-                height: MediaQuery.of(context).size.width * 0.3,
-                color: Colors.white,
-                child: QrImageView(
-                  data: student.ID,
-                  version: QrVersions.auto,
-                  gapless: true,
-                ),
+              Column(
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.3,
+                    height: MediaQuery.of(context).size.width * 0.3,
+                    color: Colors.white,
+                    child: QrImageView(
+                      data: student.ID,
+                      version: QrVersions.auto,
+                      gapless: true,
+                    ),
+                  ),
+                  IconButton(
+                    color: AppColors.color6,
+
+                    onPressed: () {
+                      downloadQrImageView(
+                        context,
+                        student.ID,
+                        "${student.ID} - ${student.name}",
+                      );
+                    },
+                    icon: Icon(Icons.download, color: AppColors.color4),
+                    iconSize: 30,
+                  ),
+                ],
               ),
               SizedBox(width: MediaQuery.of(context).size.width * 0.03),
               Padding(

@@ -4,6 +4,7 @@ import 'package:apk/firebase/studentFunctios.dart';
 import 'package:apk/screen/UIBuilding/studentList.dart';
 import 'package:apk/screen/popUpWindows/alertMsg.dart';
 import 'package:apk/screen/studentList.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 List<aStudent> allStudent = [];
@@ -19,20 +20,41 @@ bool isStudentObjectNull(aStudent student) {
       student.gender == "" ||
       student.state == "" ||
       student.curriculm == "" ||
-      student.ID.length != 13) {
+      student.ID.length != 15) {
     return false;
   } else {
     return true;
   }
 }
 
-String genarateStudentID(BuildContext context, aStudent student) {
+Future<String> genarateStudentID(
+  BuildContext context,
+  aStudent student,
+  String OLYear,
+) async {
   String studentID = "";
   studentID += student.curriculm == "Edexcel" ? "E" : "C";
   studentID +=
-      "${student.grade}-${student.birthDay.toDate().month.toString().padLeft(2, '0')}${student.birthDay.toDate().day.toString().padLeft(2, '0')}-" +
-      "${student.registeredDate.toDate().month.toString().padLeft(2, '0')}${student.registeredDate.toDate().day.toString().padLeft(2, '0')}";
+      "${OLYear.isEmpty ? "0" : OLYear.substring(2, 4)}-${student.birthDay.toDate().month.toString().padLeft(2, '0')}${student.birthDay.toDate().day.toString().padLeft(2, '0')}-" +
+      "${student.registeredDate.toDate().month.toString().padLeft(2, '0')}${student.registeredDate.toDate().day.toString().padLeft(2, '0')}" +
+      "${await getStudentDailyRegisteredCount(context, student.registeredDate)}";
   return studentID;
+}
+
+Future<String> getStudentDailyRegisteredCount(
+  BuildContext context,
+  Timestamp date,
+) async {
+  await getAllStudent(context);
+  int count = 0;
+  for (var student in allStudent) {
+    if (student.registeredDate.toDate().day == date.toDate().day &&
+        student.registeredDate.toDate().month == date.toDate().month &&
+        student.registeredDate.toDate().year == date.toDate().year) {
+      count++;
+    }
+  }
+  return count.toString().padLeft(2, '0');
 }
 
 Future<void> registerStudentController(
@@ -147,5 +169,17 @@ void deleteStudentController(BuildContext context, aStudent student) async {
       "Error deleting student: ${e.toString()}",
       Icons.warning_amber,
     );
+  }
+}
+
+void removeClassWhenClassDeleted(BuildContext context, String classID) async {
+  await getAllStudent(context);
+  print("Removing class ID: $classID from all students");
+  for (var student in allStudent) {
+    if (student.classID.contains(classID)) {
+      print("Removing class ID: $classID from student: ${student.name}");
+      student.classID.removeWhere((id) => id == classID);
+      await updateStudent(context, student);
+    }
   }
 }
