@@ -54,8 +54,12 @@ GestureDetector listCardOnViewStudent(
       width: MediaQuery.of(context).size.width * 0.8,
       decoration: BoxDecoration(
         color:
-            student.state == "Online"
-                ? const Color.fromARGB(255, 158, 160, 3)
+            student.grade !=
+                    object
+                        .grade // Check if the student's grade matches the class grade"
+                ? AppColors.color3.withOpacity(
+                  0.5,
+                ) // If not, set a different color with reduced opacity
                 : AppColors.color3, // Set the background color of the container
         borderRadius: BorderRadius.circular(10.0), // Set the corner radius
       ),
@@ -87,7 +91,7 @@ GestureDetector listCardOnViewStudent(
           ),
           SizedBox(width: MediaQuery.of(context).size.width * 0.01),
           Container(
-            width: MediaQuery.of(context).size.width * 0.25,
+            width: MediaQuery.of(context).size.width * 0.2,
             child: Text(
               "${name[0]}",
               style: fontStyle.font3.copyWith(

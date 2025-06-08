@@ -46,8 +46,8 @@ class _QRScannerPageState extends State<QRScannerPage> {
         result = scanData;
       });
       String studentID = scanData.code.toString();
-      print("Lenth of student ID ${studentID.length}");
-      if (studentID.length == 13) {
+      print("Lenth of student ID ${studentID.length} --> ${studentID}");
+      if (studentID.length == 15) {
         catchQRScannerID(
           context,
           studentID,
@@ -63,7 +63,7 @@ class _QRScannerPageState extends State<QRScannerPage> {
         snackBarMsg(
           context,
           AppColors.color6,
-          "Invalid QR Code",
+          "Invalid QR Code ${studentID}",
           Icons.warning,
         );
       }

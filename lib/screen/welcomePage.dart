@@ -35,8 +35,8 @@ class _welcomePageState extends State<welcomePage> {
           SizedBox(height: MediaQuery.of(context).size.height * 0.02),
           Center(
             child: Container(
-              height: MediaQuery.of(context).size.height * 0.22,
-              width: MediaQuery.of(context).size.height * 0.22,
+              height: MediaQuery.of(context).size.height * 0.3,
+              width: MediaQuery.of(context).size.height * 0.3,
               child: Image.asset("Image/wiseway logo.png"),
               decoration: BoxDecoration(shape: BoxShape.circle),
             ),

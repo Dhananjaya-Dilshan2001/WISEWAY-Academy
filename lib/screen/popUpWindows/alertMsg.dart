@@ -63,7 +63,14 @@ void snackBarMsg(
         children: [
           Icon(icon, color: AppColors.color4),
           SizedBox(width: 10),
-          Text(msg, style: fontStyle.font3),
+          Expanded(
+            child: Text(
+              msg,
+              style: fontStyle.font3,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
+            ),
+          ),
         ],
       ),
       duration: Duration(seconds: 4),

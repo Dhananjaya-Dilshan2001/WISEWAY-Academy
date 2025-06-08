@@ -185,14 +185,30 @@ Future<void> classMonthlyPaymentPDF(
                       student,
                       payments,
                     );
+                    bool validStudent =
+                        classObject.grade ==
+                                fetchStudenDetailsByID(
+                                  allStudent,
+                                  student,
+                                  "grade",
+                                )
+                            ? true
+                            : false;
+                    print("$studentName Is normal Student----> $validStudent");
                     if (paymentList.isEmpty) {
                       return [
                         [
                           (i + 1).toString(),
                           studentName,
-                          "Unpaid",
-                          "Unpaid",
-                          "Unpaid",
+                          validStudent
+                              ? "Unpaid"
+                              : "Grade ${fetchStudenDetailsByID(allStudent, student, "grade")}",
+                          validStudent
+                              ? "Unpaid"
+                              : "Grade ${fetchStudenDetailsByID(allStudent, student, "grade")}",
+                          validStudent
+                              ? "Unpaid"
+                              : "Grade ${fetchStudenDetailsByID(allStudent, student, "grade")}",
                         ],
                       ];
                     } else {
@@ -200,9 +216,15 @@ Future<void> classMonthlyPaymentPDF(
                         (p) => [
                           (i + 1).toString(),
                           studentName,
-                          "${p.collectedDate.toDate().month}/${p.collectedDate.toDate().day} (${p.method})",
-                          "${p.month} (${p.reason})",
-                          "${p.value}/=",
+                          validStudent
+                              ? "${p.collectedDate.toDate().month}/${p.collectedDate.toDate().day} (${p.method})"
+                              : "Grade ${fetchStudenDetailsByID(allStudent, student, "grade")}",
+                          validStudent
+                              ? "${p.month} (${p.reason})"
+                              : "Grade ${fetchStudenDetailsByID(allStudent, student, "grade")}",
+                          validStudent
+                              ? "${p.value}/="
+                              : "Grade ${fetchStudenDetailsByID(allStudent, student, "grade")}",
                         ],
                       );
                     }

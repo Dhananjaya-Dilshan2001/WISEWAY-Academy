@@ -39,11 +39,7 @@ Future<void> viewCard(BuildContext context, aStudent student) async {
                     color: AppColors.color6,
 
                     onPressed: () {
-                      downloadQrImageView(
-                        context,
-                        student.ID,
-                        "${student.ID} - ${student.name}",
-                      );
+                      downloadQrImageView(context, student.ID, student);
                     },
                     icon: Icon(Icons.download, color: AppColors.color4),
                     iconSize: 30,

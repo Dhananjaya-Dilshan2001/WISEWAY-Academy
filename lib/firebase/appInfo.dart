@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-String appVersion = "1.1";
+String appVersion = "1.2";
 String ownerMsgTitle = "";
 String ownerMsgBody = "";
 bool appAccess = false;

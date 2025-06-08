@@ -3,6 +3,7 @@ import 'package:apk/screen/welcomePage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +24,17 @@ Future<void> main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+  await _requestStoragePermission();
   runApp(const MyApp());
+}
+
+Future<void> _requestStoragePermission() async {
+  if (Platform.isAndroid) {
+    var status = await Permission.manageExternalStorage.status;
+    if (!status.isGranted) {
+      await Permission.manageExternalStorage.request();
+    }
+  }
 }
 
 class MyApp extends StatelessWidget {
