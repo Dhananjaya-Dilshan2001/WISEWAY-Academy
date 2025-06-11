@@ -215,7 +215,7 @@ Future<void> buildClassList(
       objects[i].grade,
       objects[i].curriculm,
       objects[i].subject,
-      objects[i].note.split(' '),
+      objects[i].note.split('   '),
       objects[i].teacher,
       objects[i].ID,
       objects[i],

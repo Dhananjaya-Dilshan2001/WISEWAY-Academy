@@ -79,7 +79,7 @@ class _welcomePageState extends State<welcomePage> {
           Center(
             child: commonButton.button1(
               MediaQuery.of(context).size.width * 0.6,
-              "Logging",
+              "LOGIN",
               AppColors.color6,
               () async {
                 print('Tap on Logging');

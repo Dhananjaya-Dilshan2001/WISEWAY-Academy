@@ -60,7 +60,7 @@ Future<void> generatePaperBudgetPDF(
                 pw.Image(logoImage, width: 100, height: 100),
                 pw.Center(
                   child: pw.Text(
-                    "WISEWAY Academy",
+                    "WISEWAY Academy - Kiribathgoda",
                     style: pw.TextStyle(
                       fontSize: 30,
                       fontWeight: pw.FontWeight.bold,
