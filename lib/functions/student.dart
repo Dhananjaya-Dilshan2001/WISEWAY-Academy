@@ -1,6 +1,7 @@
 import 'package:apk/commonWidget/font&color.dart';
 import 'package:apk/dataModel/model.dart';
 import 'package:apk/firebase/studentFunctios.dart';
+import 'package:apk/functions/sorting.dart';
 import 'package:apk/screen/UIBuilding/studentList.dart';
 import 'package:apk/screen/popUpWindows/alertMsg.dart';
 import 'package:apk/screen/studentList.dart';
@@ -134,10 +135,11 @@ void updateStudentController(BuildContext context, aStudent student) async {
     "Student updated successfully.",
     Icons.check,
   );
-  Navigator.pop(context);
+
   await getAllStudent(context);
-  await buildStudentList(context, allStudent);
-  Navigator.pushReplacement(
+  Navigator.pop(context);
+  await buildStudentList(context, sortStudentList(context, allStudent, "0"));
+  Navigator.push(
     context,
     MaterialPageRoute(builder: (context) => StudentList()),
   );

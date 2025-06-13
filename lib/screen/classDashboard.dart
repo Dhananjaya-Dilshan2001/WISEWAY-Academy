@@ -173,9 +173,12 @@ class _ClassdashboardState extends State<Classdashboard> {
                     );
                   },
                   child: Container(
-                    padding: EdgeInsets.all(5),
-                    height: MediaQuery.of(context).size.width * 0.1,
-                    //width: MediaQuery.of(context).size.width * 0.14,
+                    padding: EdgeInsets.only(
+                      left: 15,
+                      right: 15,
+                      top: 5,
+                      bottom: 5,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.color2,
                       borderRadius: BorderRadius.circular(

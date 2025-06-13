@@ -53,6 +53,13 @@ GestureDetector listCardOnViewStudent(
       height: MediaQuery.of(context).size.height * 0.05,
       width: MediaQuery.of(context).size.width * 0.8,
       decoration: BoxDecoration(
+        border: Border.all(
+          color:
+              student.state == "Online"
+                  ? const Color.fromARGB(255, 225, 243, 111)
+                  : AppColors.color3, // Border color
+          width: 2.0, // Border width
+        ),
         color:
             student.grade !=
                     object
@@ -80,7 +87,14 @@ GestureDetector listCardOnViewStudent(
             height: MediaQuery.of(context).size.width * 0.08,
             width: MediaQuery.of(context).size.width * 0.05,
             decoration: BoxDecoration(
-              color: AppColors.color4,
+              border: Border.all(
+                color: AppColors.color4, // Border color
+                width: 1.0, // Border width
+              ),
+              color:
+                  student.gender == "Male"
+                      ? AppColors.color4
+                      : const Color.fromARGB(170, 232, 124, 178),
               shape: BoxShape.circle,
               image: DecorationImage(
                 image: AssetImage('Image/studentP.png'), // Background image
@@ -92,11 +106,33 @@ GestureDetector listCardOnViewStudent(
           SizedBox(width: MediaQuery.of(context).size.width * 0.01),
           Container(
             width: MediaQuery.of(context).size.width * 0.2,
-            child: Text(
-              "${name[0]}",
-              style: fontStyle.font3.copyWith(
-                fontSize: 12,
-              ), // Updated font size
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.025,
+                  child: Text(
+                    "${name[0]}",
+                    style: fontStyle.font3.copyWith(
+                      fontSize:
+                          MediaQuery.of(context).size.height *
+                          0.015, // Updated font size
+                    ),
+                  ),
+                ),
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.02,
+                  child: Text(
+                    "${student.grade}",
+                    style: fontStyle.font3.copyWith(
+                      fontSize:
+                          MediaQuery.of(context).size.height *
+                          0.01, // Updated font size
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           SizedBox(width: MediaQuery.of(context).size.width * 0.05),
@@ -213,6 +249,7 @@ Future<void> buildStudentListOnViewStudent(
   String year,
 ) async {
   viewStudent = []; // Clear the list before adding new items
+  students.sort((a, b) => a.name.compareTo(b.name)); // Sort students by name
   int l = students.length;
   print(
     "Call buildStudentListOnViewStudent --- Passing Month Name Is ${month.name}",

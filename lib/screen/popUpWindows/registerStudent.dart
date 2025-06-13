@@ -61,7 +61,7 @@ class _registerStudentState extends State<registerStudent> {
     }
     if (widget.student.ID.isEmpty) {
       widget.student.gender = "Male";
-      widget.student.curriculm = "Cambridge";
+      widget.student.curriculm = "Edexcel";
       widget.student.state = "Physical";
       OLYear = "";
     } else {
@@ -76,9 +76,6 @@ class _registerStudentState extends State<registerStudent> {
     return AlertDialog(
       backgroundColor: AppColors.color2,
       content: SingleChildScrollView(
-        //padding: EdgeInsets.all(10.0),
-        //height: MediaQuery.of(context).size.height * 0.6,
-        //width: MediaQuery.of(context).size.width * 0.7,
         child: Column(
           children: [
             Text(title, style: fontStyle.font2),
@@ -441,8 +438,7 @@ class _registerStudentState extends State<registerStudent> {
             Row(
               children: [
                 Container(
-                  height: MediaQuery.of(context).size.height * 0.12,
-                  width: MediaQuery.of(context).size.width * 0.3,
+                  padding: EdgeInsets.all(5),
                   //color: AppColors.color5,
                   child: Column(
                     children: [
@@ -460,8 +456,12 @@ class _registerStudentState extends State<registerStudent> {
                           });
                         },
                         child: Container(
-                          height: 30,
-                          width: MediaQuery.of(context).size.width * 0.2,
+                          padding: EdgeInsets.only(
+                            left: 5,
+                            right: 5,
+                            top: 5,
+                            bottom: 5,
+                          ),
                           child: Center(
                             child: Text("Cambridge", style: fontStyle.font4),
                           ),
@@ -485,8 +485,12 @@ class _registerStudentState extends State<registerStudent> {
                           });
                         },
                         child: Container(
-                          height: 30,
-                          width: MediaQuery.of(context).size.width * 0.2,
+                          padding: EdgeInsets.only(
+                            left: 5,
+                            right: 5,
+                            top: 5,
+                            bottom: 5,
+                          ),
                           child: Center(
                             child: Text("Edexcel", style: fontStyle.font4),
                           ),
@@ -502,8 +506,7 @@ class _registerStudentState extends State<registerStudent> {
                 SizedBox(width: MediaQuery.of(context).size.width * 0.08),
                 //SizedBox(width: 5,),
                 Container(
-                  height: MediaQuery.of(context).size.height * 0.12,
-                  width: MediaQuery.of(context).size.width * 0.3,
+                  padding: EdgeInsets.all(5),
                   //color: AppColors.color6,
                   child: Column(
                     children: [
@@ -562,7 +565,7 @@ class _registerStudentState extends State<registerStudent> {
                 ),
               ],
             ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.005),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
             GestureDetector(
               onTap: () async {
                 if (widget.student.ID.isEmpty) {

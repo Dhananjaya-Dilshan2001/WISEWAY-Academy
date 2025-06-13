@@ -129,10 +129,7 @@ GestureDetector listCardOfDay(
               );
             },
             child: Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: MediaQuery.of(context).size.width * 0.02,
-              ),
-              height: MediaQuery.of(context).size.width * 0.1,
+              padding: EdgeInsets.symmetric(horizontal: 5),
               width: MediaQuery.of(context).size.width * 0.14,
               decoration: BoxDecoration(
                 color: AppColors.color2,
@@ -146,7 +143,7 @@ GestureDetector listCardOfDay(
                   SizedBox(width: MediaQuery.of(context).size.width * 0.02),
                   Text(
                     "${month.attendance[no - 1].students.length}",
-                    style: fontStyle.font3,
+                    style: fontStyle.font3.copyWith(fontSize: 12),
                   ),
                 ],
               ), // Changed icon to person

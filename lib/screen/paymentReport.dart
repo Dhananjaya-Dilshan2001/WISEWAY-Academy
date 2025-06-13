@@ -188,10 +188,10 @@ class _paymentReportState extends State<paymentReport> {
           SizedBox(height: MediaQuery.of(context).size.height * 0.01),
           Center(
             child: Container(
-              height: MediaQuery.of(context).size.height * 0.6,
+              height: MediaQuery.of(context).size.height * 0.65,
               width: MediaQuery.of(context).size.width * 0.9,
               //color: AppColors.color5,
-              child: Column(
+              child: ListView(
                 children: [
                   Center(child: Text("Classes", style: fontStyle.font3)),
                   Container(

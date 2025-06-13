@@ -43,7 +43,7 @@ GestureDetector listCard(
       decoration: BoxDecoration(
         color:
             studentObject.state == "Online"
-                ? const Color.fromARGB(255, 158, 160, 3)
+                ? const Color.fromARGB(133, 204, 207, 14)
                 : AppColors.color3, // Set the background color of the container
         borderRadius: BorderRadius.circular(10.0), // Set the corner radius
       ),
@@ -69,7 +69,14 @@ GestureDetector listCard(
               height: MediaQuery.of(context).size.width * 0.1,
               width: MediaQuery.of(context).size.width * 0.1,
               decoration: BoxDecoration(
-                color: AppColors.color4,
+                border: Border.all(
+                  color: AppColors.color4,
+                  width: 2.0, // Border width
+                ),
+                color:
+                    studentObject.gender == "Female"
+                        ? const Color.fromARGB(170, 232, 124, 178)
+                        : AppColors.color4,
                 shape: BoxShape.circle,
                 image: DecorationImage(
                   image: AssetImage('Image/studentP.png'), // Background image
@@ -86,7 +93,27 @@ GestureDetector listCard(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8.0), // Set the corner radius
             ),
-            child: Text("${name[0]}", style: fontStyle.font3),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.03,
+                  child: Text("${name[0]}", style: fontStyle.font3),
+                ),
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.02,
+                  child: Text(
+                    "${name.length > 1 ? "${name[1]} - ${studentObject.grade}" : "${studentObject.grade}"}",
+                    style: fontStyle.font3.copyWith(
+                      fontSize:
+                          MediaQuery.of(context).size.height *
+                          0.01, // Updated font size
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
           SizedBox(width: MediaQuery.of(context).size.width * 0.01),
           Container(
