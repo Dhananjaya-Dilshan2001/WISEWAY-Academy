@@ -82,9 +82,15 @@ Future<void> downloadQrImageView(
 ) async {
   try {
     showPending(context);
+    String birthDay =
+        "${student.birthDay.toDate().year.toString().padLeft(2, '0')}"
+        "-${student.birthDay.toDate().month.toString().padLeft(2, '0')}"
+        "-${student.birthDay.toDate().day.toString().padLeft(2, '0')}";
     String fileName =
-        "${student.grade} - ${student.curriculm} - ${student.name} - ${student.ID}";
+        "G${student.grade} - ${student.curriculm} - ${student.name} "
+        "- $birthDay - ${student.ID} - ${student.school}";
     // Request storage permission
+    print(fileName);
     var status = await Permission.storage.request();
     if (!status.isGranted) {
       // snackBarMsg(
@@ -161,7 +167,7 @@ Future<void> downloadQrImageView(
     snackBarMsg(
       context,
       AppColors.color6,
-      "Error..! Check if the QR Code folder exists in Downloads If not create it.",
+      "Error..! Check if the QR Codes folder exists in Downloads If not create it.",
       Icons.warning,
     );
   }

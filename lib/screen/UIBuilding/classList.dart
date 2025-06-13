@@ -320,6 +320,7 @@ void buildGradeListOfClasses(
 ) {
   gradeListOfClasses = [];
   List<String> grades = classes.map((c) => c.grade).toSet().toList();
+  grades.sort((a, b) => a.compareTo(b)); // Sort the grades in ascending order
   int l = grades.length;
   print("Lenth of array in Build Grade List Is $grades");
 

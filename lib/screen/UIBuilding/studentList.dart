@@ -96,13 +96,7 @@ GestureDetector listCard(
             ),
             child: Text("$ID", style: fontStyle.font5),
           ),
-          //SizedBox(width: MediaQuery.of(context).size.width * 0.01),
-          Container(
-            height: MediaQuery.of(context).size.height * 0.04,
 
-            //width: MediaQuery.of(context).size.width * 0.1,
-            child: Center(child: Text("$grade", style: fontStyle.font3)),
-          ),
           SizedBox(width: MediaQuery.of(context).size.width * 0.03),
           GestureDetector(
             onTap: () async {
@@ -169,6 +163,7 @@ void buildGradeList(
 ) {
   gradeList = [];
   List<String> grades = students.map((s) => s.grade).toSet().toList();
+  grades.sort((a, b) => a.compareTo(b)); // Sort the grades in ascending order
   int l = grades.length;
   print("Lenth of array in Build Grade List Is $grades");
 

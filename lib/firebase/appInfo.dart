@@ -1,10 +1,11 @@
 import 'package:apk/commonWidget/font&color.dart';
 import 'package:apk/screen/popUpWindows/alertMsg.dart';
+import 'package:apk/screen/welcomePage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-String appVersion = "1.2";
+String appVersion = "1.3";
 String ownerMsgTitle = "";
 String ownerMsgBody = "";
 bool appAccess = false;
@@ -158,8 +159,11 @@ void changeAdminPasswordController(
 ) async {
   showPending(context);
   if (await cheackAdminPassword(context, oldPassword)) {
-    Navigator.of(context).pop();
-    Navigator.of(context).pop();
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => welcomePage()),
+      (Route<dynamic> route) => false,
+    );
     updateAdminPassword(context, newPassword);
   } else {
     print("Old Password is not matched");
